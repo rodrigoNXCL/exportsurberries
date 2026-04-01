@@ -1,0 +1,127 @@
+---
+// Componente Header con navegación principal
+// Se usa en todas las páginas del sitio
+---
+
+<header class="header">
+  <div class="container-custom">
+    <div class="header-content">
+      {/* Logo Oficial */}
+      <a href="/" class="logo">
+        <img 
+          src="/images/logo-surberries.png" 
+          alt="Sur Berries - Comercializadora y Exportadora" 
+          class="logo-image"
+        />
+      </a>
+
+      {/* Navegación Principal */}
+      <nav class="nav-main">
+        <ul class="nav-list">
+          <li><a href="/" class="nav-link">Inicio</a></li>
+          <li><a href="/productos" class="nav-link">Productos</a></li>
+          <li><a href="/nosotros" class="nav-link">Nosotros</a></li>
+          <li><a href="/contacto" class="nav-link">Contacto</a></li>
+        </ul>
+      </nav>
+
+      {/* Selector de Idioma (Placeholder) */}
+      <div class="language-switcher">
+        <button class="lang-btn active">ES</button>
+        <span class="lang-separator">|</span>
+        <button class="lang-btn">EN</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  .header {
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #E5E5E5;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    gap: 2rem;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    transition: opacity 0.2s ease;
+  }
+
+  .logo:hover {
+    opacity: 0.85;
+  }
+
+  .logo-image {
+    height: 120px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  .nav-list {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+  }
+
+  .nav-link {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 500;
+    color: #1A1A1A;
+    transition: color 0.2s ease;
+  }
+
+  .nav-link:hover {
+    color: #8B0032;
+  }
+
+  .language-switcher {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .lang-btn {
+    background: none;
+    border: none;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #4A4A4A;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    transition: color 0.2s ease;
+  }
+
+  .lang-btn:hover,
+  .lang-btn.active {
+    color: #8B0032;
+  }
+
+  .lang-separator {
+    color: #E5E5E5;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .header-content {
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .nav-list {
+      gap: 1rem;
+      font-size: 0.875rem;
+    }
+  }
+</style>
