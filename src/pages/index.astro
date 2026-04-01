@@ -1,36 +1,23 @@
 ---
 // Página de inicio - Versión Español
-import '../styles/global.css';
+import Layout from '../layouts/Layout.astro';
 ---
 
-<!doctype html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="generator" content={Astro.generator} />
-    
-    {/* SEO Básico */}
-    <title>Exportadora Surberries | Frutos Congelados Premium de Chile</title>
-    <meta name="description" content="Exportadora líder en frutillas, frambuesas y arándanos congelados IQF. Calidad chilena para el mundo." />
-  </head>
-  <body>
-    <main class="min-h-screen flex items-center justify-center">
-      <div class="text-center container-custom py-20">
-        <h1 class="mb-6 fade-in">🍓 Exportadora Surberries</h1>
-        <p class="text-xl mb-8 max-w-2xl mx-auto fade-in" style="animation-delay: 0.1s">
-          Sitio web en desarrollo - Versión Español
-        </p>
-        <div class="flex gap-4 justify-center fade-in" style="animation-delay: 0.2s">
-          <a href="#" class="btn btn-primary">Conocer Productos</a>
-          <a href="#" class="btn btn-outline">Contactar Ventas</a>
-        </div>
+<Layout title="Inicio" description="Exportadora líder en frutillas, frambuesas y arándanos congelados IQF. Calidad chilena para el mundo." lang="es">
+  <main class="min-h-screen flex items-center justify-center">
+    <div class="text-center container-custom py-20">
+      <h1 class="mb-6 fade-in">🍓 Exportadora Surberries</h1>
+      <p class="text-xl mb-8 max-w-2xl mx-auto fade-in" style="animation-delay: 0.1s">
+        Sitio web en desarrollo - Versión Español
+      </p>
+      <div class="flex gap-4 justify-center fade-in" style="animation-delay: 0.2s">
+        <a href="#" class="btn btn-primary">Conocer Productos</a>
+        <a href="#" class="btn btn-outline">Contactar Ventas</a>
       </div>
-    </main>
+    </div>
+  </main>
 
-    <script>
-      console.log('✅ Surberries Site Loaded - ES');
-    </script>
-  </body>
-</html>
+  <script>
+    console.log('✅ Surberries Site Loaded - ES');
+  </script>
+</Layout>
