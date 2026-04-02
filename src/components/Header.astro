@@ -1,61 +1,128 @@
 ---
-// Componente Header con navegación principal
-// Se usa en todas las páginas del sitio
+// Componente Header Moderno - Estilo Enterprise 2026
 ---
 
-<header class="header">
+<header class="header" id="header">
   <div class="container-custom">
     <div class="header-content">
-      {/* Logo Oficial */}
+      {/* Logo */}
       <a href="/" class="logo">
         <img 
           src="/images/logo-surberries.png" 
-          alt="Sur Berries - Comercializadora y Exportadora" 
+          alt="Sur Berries - Exportadora de Frutos Congelados" 
           class="logo-image"
         />
       </a>
 
-      {/* Navegación Principal */}
-      <nav class="nav-main">
+      {/* Navegación Desktop */}
+      <nav class="nav-desktop">
         <ul class="nav-list">
-          <li><a href="/" class="nav-link">Inicio</a></li>
-          <li><a href="/productos" class="nav-link">Productos</a></li>
-          <li><a href="/nosotros" class="nav-link">Nosotros</a></li>
-          <li><a href="/contacto" class="nav-link">Contacto</a></li>
+          <li><a href="#inicio" class="nav-link">Inicio</a></li>
+          <li><a href="#productos" class="nav-link">Productos</a></li>
+          <li><a href="#nosotros" class="nav-link">Nosotros</a></li>
+          <li><a href="#contacto" class="nav-link">Contacto</a></li>
         </ul>
       </nav>
 
-      {/* Selector de Idioma (Placeholder) */}
-      <div class="language-switcher">
-        <button class="lang-btn active">ES</button>
-        <span class="lang-separator">|</span>
-        <button class="lang-btn">EN</button>
+      {/* Selector de Idioma + CTA */}
+      <div class="header-actions">
+        <div class="language-switcher">
+          <button class="lang-btn active">ES</button>
+          <span class="lang-separator">|</span>
+          <button class="lang-btn">EN</button>
+        </div>
+        <a href="#contacto" class="btn-cotizar">Cotizar</a>
       </div>
+
+      {/* Menú Mobile Toggle */}
+      <button class="mobile-toggle" id="mobileToggle" aria-label="Abrir menú">
+        <span class="hamburger"></span>
+      </button>
     </div>
   </div>
+
+  {/* Menú Mobile */}
+  <div class="nav-mobile" id="navMobile">
+    <ul class="nav-mobile-list">
+      <li><a href="#inicio" class="nav-mobile-link">Inicio</a></li>
+      <li><a href="#productos" class="nav-mobile-link">Productos</a></li>
+      <li><a href="#nosotros" class="nav-mobile-link">Nosotros</a></li>
+      <li><a href="#contacto" class="nav-mobile-link">Contacto</a></li>
+      
+      {/* Botón Cotizar dentro del menú mobile */}
+      <li class="nav-mobile-cta">
+        <a href="#contacto" class="btn btn-primary" style="width: 100%; justify-content: center;">
+          Cotizar Ahora
+        </a>
+      </li>
+    </ul>
+  </div>>
 </header>
+
+<script>
+  // Header scroll effect
+  const header = document.getElementById('header');
+  const mobileToggle = document.getElementById('mobileToggle');
+  const navMobile = document.getElementById('navMobile');
+
+  // Blur effect al hacer scroll
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+      header?.classList.add('header-scrolled');
+    } else {
+      header?.classList.remove('header-scrolled');
+    }
+  });
+
+  // Toggle menú mobile
+  mobileToggle?.addEventListener('click', () => {
+    navMobile?.classList.toggle('nav-mobile-active');
+    mobileToggle.classList.toggle('toggle-active');
+  });
+
+  // Cerrar menú mobile al hacer click en enlace
+  document.querySelectorAll('.nav-mobile-link').forEach(link => {
+    link.addEventListener('click', () => {
+      navMobile?.classList.remove('nav-mobile-active');
+      mobileToggle?.classList.remove('toggle-active');
+    });
+  });
+</script>
 
 <style>
   .header {
-    background-color: #FFFFFF;
-    border-bottom: 1px solid #E5E5E5;
-    position: sticky;
+    position: fixed;
     top: 0;
-    z-index: 100;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: transparent;
+    transition: all 0.3s ease;
+  }
+
+  .header-scrolled {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
   }
 
   .header-content {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.5rem 0;
+    padding: 1.25rem 0;
     gap: 2rem;
+  }
+
+  .header-scrolled .header-content {
+    padding: 0.75rem 0;
   }
 
   .logo {
     display: flex;
     align-items: center;
     transition: opacity 0.2s ease;
+    flex-shrink: 0; /* Evita que se encoja */
   }
 
   .logo:hover {
@@ -63,26 +130,96 @@
   }
 
   .logo-image {
-    height: 120px;
+    height: 90px;
     width: auto;
     object-fit: contain;
+    transition: height 0.3s ease;
+  }
+
+  .header-scrolled .logo-image {
+    height: 70px;
+  }
+
+  /* Responsive Mobile */
+  @media (max-width: 1024px) {
+    .logo-image {
+      height: 70px;  /* Mobile base: 70px */
+    }
+
+    .header-scrolled .logo-image {
+      height: 60px;  /* Mobile scroll: 60px (NO más pequeño) */
+    }
+
+    .header-content {
+      padding: 1rem 0;
+    }
+
+    .header-scrolled .header-content {
+      padding: 0.75rem 0;
+    }
+  }
+
+  /* Mobile muy pequeño */
+  @media (max-width: 480px) {
+    .logo-image {
+      height: 60px;  /* Mínimo seguro: 60px */
+    }
+
+    .header-scrolled .logo-image {
+      height: 55px;  /* Scroll en móvil pequeño: 55px */
+    }
+  }
+
+  /* Navegación Desktop */
+  .nav-desktop {
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    .nav-desktop {
+      display: block;
+    }
   }
 
   .nav-list {
     display: flex;
     list-style: none;
-    gap: 2rem;
+    gap: 2.5rem;
   }
 
   .nav-link {
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: var(--font-sans);
     font-weight: 500;
-    color: #1A1A1A;
-    transition: color 0.2s ease;
+    font-size: 0.95rem;
+    color: var(--color-gray-700);
+    transition: color var(--transition-fast);
+    position: relative;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--color-primary);
+    transition: width var(--transition-base);
   }
 
   .nav-link:hover {
-    color: #8B0032;
+    color: var(--color-primary);
+  }
+
+  .nav-link:hover::after {
+    width: 100%;
+  }
+
+  /* Header Actions */
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
   }
 
   .language-switcher {
@@ -94,34 +231,195 @@
   .lang-btn {
     background: none;
     border: none;
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: var(--font-sans);
     font-weight: 600;
     font-size: 0.875rem;
-    color: #4A4A4A;
+    color: var(--color-gray-500);
     cursor: pointer;
     padding: 0.25rem 0.5rem;
-    transition: color 0.2s ease;
+    transition: color var(--transition-fast);
   }
 
   .lang-btn:hover,
   .lang-btn.active {
-    color: #8B0032;
+    color: var(--color-primary);
   }
 
   .lang-separator {
-    color: #E5E5E5;
+    color: var(--color-gray-300);
   }
 
-  /* Responsive */
-  @media (max-width: 768px) {
+  .btn-cotizar {
+    background: var(--color-primary);
+    color: var(--color-white);
+    padding: 0.625rem 1.5rem;
+    border-radius: var(--radius-full);
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all var(--transition-base);
+  }
+
+  .btn-cotizar:hover {
+    background: var(--color-primary-dark);
+    color: var(--color-white);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  /* Mobile Toggle */
+  .mobile-toggle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  @media (min-width: 1024px) {
+    .mobile-toggle {
+      display: none;
+    }
+  }
+
+  .hamburger {
+    width: 24px;
+    height: 2px;
+    background: var(--color-gray-700);
+    position: relative;
+    transition: background var(--transition-fast);
+  }
+
+  .hamburger::before,
+  .hamburger::after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 2px;
+    background: var(--color-gray-700);
+    transition: transform var(--transition-base);
+  }
+
+  .hamburger::before {
+    top: -8px;
+  }
+
+  .hamburger::after {
+    bottom: -8px;
+  }
+
+  .toggle-active .hamburger {
+    background: transparent;
+  }
+
+  .toggle-active .hamburger::before {
+    transform: rotate(45deg);
+    top: 0;
+  }
+
+  .toggle-active .hamburger::after {
+    transform: rotate(-45deg);
+    bottom: 0;
+  }
+
+  /* Menú Mobile */
+  .nav-mobile {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 80%;
+    max-width: 350px;
+    height: 100vh;
+    background: var(--color-white);
+    box-shadow: var(--shadow-xl);
+    padding: 6rem 2rem 2rem;
+    transition: right var(--transition-slow);
+    z-index: 999;
+  }
+
+  .nav-mobile-active {
+    right: 0;
+  }
+
+  .nav-mobile-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .nav-mobile-link {
+    font-family: var(--font-sans);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-gray-800);
+    transition: color var(--transition-fast);
+  }
+
+  .nav-mobile-link:hover {
+    color: var(--color-primary);
+  }
+
+  /* Overlay para mobile */
+  .nav-mobile-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--transition-base);
+  }
+
+  .nav-mobile-overlay-active {
+    opacity: 1;
+    visibility: visible;
+  }
+  /* =========================================
+     MOBILE: Header Actions + Toggle
+     ========================================= */
+  @media (max-width: 1023px) {
+    /* Mostrar solo selector de idioma en header mobile */
+    .header-actions .language-switcher {
+      display: flex;
+    }
+    
+    /* Ocultar botón Cotizar del header en mobile (va en el menú) */
+    .header-actions .btn-cotizar {
+      display: none;
+    }
+
+    /* Asegurar que el toggle hamburguesa sea visible y esté al final */
+    .mobile-toggle {
+      display: flex !important;
+      margin-left: 0.5rem;
+      z-index: 1001;
+    }
+
+    /* Ajustar gap en header mobile para que quepa todo */
     .header-content {
-      flex-wrap: wrap;
       gap: 1rem;
     }
 
-    .nav-list {
-      gap: 1rem;
-      font-size: 0.875rem;
+    /* CTA dentro del menú mobile */
+    .nav-mobile-cta {
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--color-gray-200);
     }
-  }
+
+    .nav-mobile-cta .btn {
+      width: 100%;
+      justify-content: center;
+      padding: 1rem;
+      font-size: 1rem;
+    }
+  }  
 </style>
