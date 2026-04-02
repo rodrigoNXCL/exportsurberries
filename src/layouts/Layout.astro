@@ -10,6 +10,7 @@ interface Props {
 const { title, description = 'Exportadora líder en frutillas, frambuesas y arándanos congelados IQF. Calidad chilena para el mundo.', lang = 'es' } = Astro.props;
 
 import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
 ---
 
 <!doctype html>
@@ -38,6 +39,7 @@ import Header from '../components/Header.astro';
   <body>
     <Header />
     <slot />
+    <Footer />
   </body>
 </html>
 
