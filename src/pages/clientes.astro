@@ -2,10 +2,12 @@
 // Página Portal de Clientes - Exportadora Surberries
 // Placeholder para futuro módulo de autenticación
 import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
 ---
 
 <Layout title="Portal de Clientes" description="Accede a la información de tus pedidos, documentos y historial de compras." lang="es">
-  
+
+<Header />  
   <main class="client-portal-page">
     <div class="container-custom">
       <div class="portal-content">
@@ -60,7 +62,7 @@ import Layout from '../layouts/Layout.astro';
 
 <style>
   .client-portal-page {
-    padding: 8rem 0 4rem;
+    padding: 10rem 0 4rem;
     min-height: 80vh;
     background: linear-gradient(135deg, var(--color-off-white) 0%, var(--color-gray-100) 100%);
     display: flex;

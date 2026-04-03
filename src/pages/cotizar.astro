@@ -2,10 +2,12 @@
 // Página Cotizar - Exportadora Surberries
 // Formulario simple con ID único + WhatsApp + Netlify Forms
 import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
 ---
 
 <Layout title="Cotizar Productos" description="Solicita una cotización personalizada de frutillas, frambuesas y arándanos congelados IQF." lang="es">
-  
+
+<Header />  
   <main class="cotizar-page">
     <div class="container-custom">
       <div class="cotizar-header">
@@ -256,7 +258,7 @@ import Layout from '../layouts/Layout.astro';
 
   <style>
     .cotizar-page {
-      padding: 8rem 0 4rem;
+      padding: 10rem 0 4rem;
       background: var(--color-off-white);
       min-height: 100vh;
     }
@@ -441,26 +443,49 @@ import Layout from '../layouts/Layout.astro';
       color: var(--color-gray-600);
     }
 
-    .info-card.highlight {
-      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-      color: var(--color-white);
-      text-align: center;
-    }
+/* Tarjeta destacada - Forzar colores */
+.info-card.highlight {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  color: #FFFFFF !important;  /* ← Forzar blanco */
+  text-align: center;
+}
 
-    .info-card.highlight h4 {
-      color: var(--color-white);
-    }
+.info-card.highlight h4 {
+  color: #FFFFFF !important;  /* ← Forzar blanco en título */
+}
 
-    .info-card.highlight .btn {
-      width: 100%;
-      margin-bottom: 1rem;
-    }
+.info-card.highlight p {
+  color: #FFFFFF !important;  /* ← Forzar blanco en párrafos */
+}
 
-    .info-contact {
-      font-size: 0.95rem;
-      opacity: 0.9;
-      line-height: 1.6;
-    }
+.info-card.highlight .btn {
+  background: #25D366;
+  color: #FFFFFF !important;
+}
+
+.info-card.highlight .btn:hover {
+  background: #1EBE57;
+  color: #FFFFFF !important;
+}
+
+/* Info de contacto - Forzar blanco */
+.info-contact {
+  font-size: 0.95rem;
+  color: #FFFFFF !important;  /* ← Forzar blanco */
+  opacity: 1;
+  line-height: 1.6;
+  font-weight: 600;  /* ← Más grueso */
+}
+
+.info-contact a {
+  color: #FFFFFF !important;  /* ← Forzar blanco en links */
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.info-contact a:hover {
+  color: #FFD44D !important;  /* ← Dorado en hover */
+}
 
     /* Responsive */
     @media (max-width: 1024px) {
