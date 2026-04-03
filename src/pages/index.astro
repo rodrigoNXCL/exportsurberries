@@ -8,16 +8,18 @@ import Hero from '../components/Hero.astro';
 
 <Layout title="Inicio" description="Exportadora líder en frutillas, frambuesas y arándanos congelados IQF. Calidad chilena para el mundo." lang="es">
   
-  {/* Override del header - Layout ya incluye Header, pero lo manejamos aquí para control total */}
   <div style="display: contents">
     <Header />
     <Hero />
     
-    {/* Placeholder para próximas secciones */}
-    <section class="section" style="min-height: 50vh; display: flex; align-items: center; justify-content: center; background: var(--color-off-white);">
+    {/* Placeholder para próximas secciones - Secciones en desarrollo */}
+    <section class="section" id="productos" style="min-height: 50vh; display: flex; align-items: center; justify-content: center; background: var(--color-off-white);">
       <div class="container-custom text-center">
-        <h2 style="margin-bottom: 1rem;">Próximamente</h2>
-        <p>Secciones de Productos, Nosotros y Contacto en desarrollo...</p>
+        <h2 style="margin-bottom: 1rem;">Productos</h2>
+        <p>Sección de productos en desarrollo...</p>
+        <a href="/cotizar" class="btn btn-primary" style="margin-top: 1.5rem;">
+          Solicitar Cotización
+        </a>
       </div>
     </section>
   </div>

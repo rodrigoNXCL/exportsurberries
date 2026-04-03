@@ -1,0 +1,179 @@
+---
+// Página Portal de Clientes - Exportadora Surberries
+// Placeholder para futuro módulo de autenticación
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Portal de Clientes" description="Accede a la información de tus pedidos, documentos y historial de compras." lang="es">
+  
+  <main class="client-portal-page">
+    <div class="container-custom">
+      <div class="portal-content">
+        <div class="portal-header">
+          <h2>Portal de Clientes</h2>
+          <p>Accede a la información de tus pedidos, documentos y historial de compras.</p>
+        </div>
+
+        <div class="portal-login-card">
+          <div class="login-icon">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+
+          <h3>Iniciar Sesión</h3>
+          <p class="login-description">
+            El portal de clientes estará disponible pronto. 
+            Si ya eres cliente, contáctanos para activar tu acceso.
+          </p>
+
+          <div class="login-actions">
+            <a href="/cotizar" class="btn btn-primary">
+              Solicitar Cotización
+            </a>
+            <a href="mailto:contacto@exportsurberries.cl" class="btn btn-outline">
+              Contactar Soporte
+            </a>
+          </div>
+
+          <div class="login-features">
+            <div class="feature-item">
+              <span class="feature-icon">📦</span>
+              <span>Estado de pedidos</span>
+            </div>
+            <div class="feature-item">
+              <span class="feature-icon">📄</span>
+              <span>Documentos y certificados</span>
+            </div>
+            <div class="feature-item">
+              <span class="feature-icon">📊</span>
+              <span>Historial de compras</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</Layout>
+
+<style>
+  .client-portal-page {
+    padding: 8rem 0 4rem;
+    min-height: 80vh;
+    background: linear-gradient(135deg, var(--color-off-white) 0%, var(--color-gray-100) 100%);
+    display: flex;
+    align-items: center;
+  }
+
+  .portal-content {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .portal-header {
+    margin-bottom: 3rem;
+  }
+
+  .portal-header h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--color-gray-900);
+  }
+
+  .portal-header p {
+    font-size: 1.125rem;
+    color: var(--color-gray-600);
+  }
+
+  .portal-login-card {
+    background: var(--color-white);
+    border-radius: var(--radius-xl);
+    padding: 3rem 2.5rem;
+    box-shadow: var(--shadow-xl);
+  }
+
+  .login-icon {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    color: var(--color-primary);
+  }
+
+  .login-icon svg {
+    width: 64px;
+    height: 64px;
+  }
+
+  .portal-login-card h3 {
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+    color: var(--color-gray-900);
+  }
+
+  .login-description {
+    font-size: 1rem;
+    color: var(--color-gray-600);
+    margin-bottom: 2rem;
+    line-height: 1.7;
+  }
+
+  .login-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 2.5rem;
+  }
+
+  .login-features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-gray-200);
+  }
+
+  .feature-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .feature-icon {
+    font-size: 1.5rem;
+  }
+
+  .feature-item span:last-child {
+    font-size: 0.875rem;
+    color: var(--color-gray-600);
+    font-weight: 500;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .client-portal-page {
+      padding: 6rem 0 3rem;
+    }
+
+    .portal-login-card {
+      padding: 2rem 1.5rem;
+    }
+
+    .login-features {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .login-actions {
+      flex-direction: column;
+    }
+
+    .login-actions .btn {
+      width: 100%;
+    }
+  }
+</style>
