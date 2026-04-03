@@ -19,6 +19,14 @@ import Layout from '../layouts/Layout.astro';
           {/* Campo oculto para Netlify Forms */}
           <input type="hidden" name="form-name" value="cotizar" />
           
+          {/* Campo honeypot para spam (Netlify) */}
+          <p class="hidden" style="display: none;">
+            <label>
+              No llenes esto si eres humano:
+              <input name="bot-field" />
+            </label>
+          </p>
+
           {/* ID de Cotización (auto-generado) */}
           <div class="cotizacion-id-card">
             <span class="id-label">ID de Cotización:</span>
@@ -217,39 +225,32 @@ import Layout from '../layouts/Layout.astro';
       window.open(url, '_blank');
     });
 
-    // Enviar por Email (Netlify Forms)
+        // Enviar por Email (Netlify Forms)
     form?.addEventListener('submit', async (e) => {
-      e.preventDefault();
+      // NO prevenir default para que Netlify lo capture
+      // Solo mostramos mensaje de éxito después
       
-      const formData = new FormData(form);
+      const originalSubmit = form.submit;
       
-      try {
-        const response = await fetch('/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams(formData).toString()
-        });
+      // Mostrar mensaje de éxito después de 500ms (tiempo para que Netlify capture)
+      setTimeout(() => {
+        formSuccess.style.display = 'block';
+        successId.textContent = cotizacionIdInput?.value || 'N/A';
+        form.reset();
+        
+        // Generar nuevo ID
+        const newId = generateCotizacionId();
+        cotizacionIdEl.textContent = newId;
+        cotizacionIdInput.value = newId;
 
-        if (response.ok) {
-          formSuccess.style.display = 'block';
-          successId.textContent = cotizacionIdInput?.value || 'N/A';
-          form.reset();
-          
-          // Generar nuevo ID
-          const newId = generateCotizacionId();
-          cotizacionIdEl.textContent = newId;
-          cotizacionIdInput.value = newId;
-
-          // Ocultar mensaje después de 5 segundos
-          setTimeout(() => {
-            formSuccess.style.display = 'none';
-          }, 5000);
-        } else {
-          alert('Hubo un error al enviar. Por favor intenta por WhatsApp.');
-        }
-      } catch (error) {
-        alert('Hubo un error al enviar. Por favor intenta por WhatsApp.');
-      }
+        // Ocultar mensaje después de 5 segundos
+        setTimeout(() => {
+          formSuccess.style.display = 'none';
+        }, 5000);
+      }, 500);
+      
+      // Permitir que el formulario se envíe naturalmente a Netlify
+      // (Netlify intercepta el POST automáticamente)
     });
   </script>
 
