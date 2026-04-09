@@ -491,14 +491,18 @@ import Hero from '../components/Hero.astro';
       margin: 3rem 0;
     }
 
-    .preview-card {
-      background: var(--color-white);
-      padding: 2.5rem 2rem;
-      border-radius: var(--radius-xl);
-      text-align: center;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      transition: all 0.3s ease;
-    }
+.preview-card {
+  background: var(--color-white);
+  padding: 2.5rem 2rem;
+  border-radius: var(--radius-xl);
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  /* ✅ Agregar estas 3 líneas para centrar contenido: */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
     .preview-card:hover {
       transform: translateY(-8px);
@@ -506,11 +510,13 @@ import Hero from '../components/Hero.astro';
     }
 
     .preview-image {
-      width: 160px;
-      height: 160px;
-      object-fit: contain;
-      margin-bottom: 1.25rem;
-    }
+  width: 160px;
+  height: 160px;
+  object-fit: contain;
+  /* ✅ Cambiar margin-bottom por margin auto para centrado vertical: */
+  margin: 0 auto 1.25rem;
+  display: block;
+}
 
     .preview-card h3 {
       font-size: 1.25rem;
