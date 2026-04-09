@@ -1,6 +1,5 @@
 ---
 // Layout base reutilizable para todas las páginas
-// Props: title, description, lang (default: 'es')
 interface Props {
   title: string;
   description?: string;
@@ -11,6 +10,7 @@ const { title, description = 'Exportadora líder en frutillas, frambuesas y ará
 
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import WhatsAppFloat from '../components/WhatsAppFloat.astro';
 ---
 
 <!doctype html>
@@ -21,25 +21,25 @@ import Footer from '../components/Footer.astro';
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     
-    {/* SEO Básico */}
     <title>{title} | Exportadora Surberries</title>
     <meta name="description" content={description} />
     
-    {/* Open Graph */}
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content={lang === 'es' ? 'es_CL' : 'en_US'} />
     
-    {/* Fuentes Google */}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
   </head>
   <body>
+    <Header />      <!-- ✅ AGREGAR ESTO -->
     
-    <slot />
+    <slot />        <!-- ✅ UN SOLO SLOT -->
+    
     <Footer />
+    <WhatsAppFloat />
   </body>
 </html>
 
