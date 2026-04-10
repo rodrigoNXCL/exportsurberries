@@ -1,26 +1,23 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 
-// ✅ Adapter para Netlify (opcional en static, pero recomendado para features extra)
+// ✅ Adapter para Netlify
 import netlify from '@astrojs/netlify';
 
 export default defineConfig({
-  // ✅ MODO ESTÁTICO - Genera HTML/CSS/JS puro (más rápido y compatible)
+  // ✅ MODO ESTÁTICO - HTML/CSS/JS puro (más rápido y compatible)
   output: 'static',
   
-  // ✅ URL del sitio para canonical URLs, sitemap, SEO
+  // ✅ URL del sitio para SEO y canonical URLs
   site: 'https://exportsurberries.com',
   
-  // ✅ Adapter de Netlify para redirects, headers, etc.
+  // ✅ Adapter de Netlify para redirects y headers
   adapter: netlify(),
   
-  // ✅ Base path (dejar vacío para dominio raíz)
+  // ✅ Base path vacío para dominio raíz
   base: '/',
   
-  // ✅ Configuración de integraciones
-  integrations: [],
-  
-  // ✅ Configuración de Vite
+  // ✅ Configuración de Vite para producción
   vite: {
     server: {
       host: true,
@@ -28,37 +25,9 @@ export default defineConfig({
       strictPort: true
     },
     build: {
-      // Optimizaciones de producción
       minify: true,
       sourcemap: false,
-      // Assets configuraciones
-      assetsInlineLimit: 4096 // 4KB
-    },
-    // Optimizar dependencias
-    optimizeDeps: {
-      include: ['@astrojs/netlify']
-    }
-  },
-  
-  // ✅ Configuración de Markdown (si usas .md files en el futuro)
-  markdown: {
-    shikiConfig: {
-      theme: 'github-light',
-      wrap: true
-    }
-  },
-  
-  // ✅ Configuración de imágenes Astro
-  image: {
-    endpoint: '/api/image' // Endpoint para optimización de imágenes
-  },
-  
-  // ✅ Configuración de i18n (para futuro soporte multi-idioma más avanzado)
-  i18n: {
-    defaultLocale: 'es',
-    locales: ['es', 'en'],
-    routing: {
-      prefixDefaultLocale: false // /en/ para inglés, / para español
+      assetsInlineLimit: 4096
     }
   }
 });
