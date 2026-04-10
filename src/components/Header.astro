@@ -1,5 +1,5 @@
 ---
-// Componente Header Moderno - Estilo Enterprise 2026
+// Componente Header Moderno - Bilingual Support
 ---
 
 <header class="header" id="header">
@@ -14,24 +14,50 @@
         />
       </a>
 
-      {/* Navegación Desktop */}
+      {/* Navegación Desktop - Dinámica según idioma */}
       <nav class="nav-desktop">
-  <ul class="nav-list">
-    <li><a href="/" class="nav-link">Inicio</a></li>
-    <li><a href="/productos" class="nav-link">Productos</a></li>
-    <li><a href="/#nosotros" class="nav-link">Nosotros</a></li>
-    <li><a href="/#contacto" class="nav-link">Contacto</a></li>
-  </ul>
-</nav>
+        <ul class="nav-list">
+          {Astro.url.pathname.startsWith('/en/') ? (
+            <>
+              <li><a href="/en/" class="nav-link">Home</a></li>
+              <li><a href="/en/productos" class="nav-link">Products</a></li>
+              <li><a href="/en/#nosotros" class="nav-link">About Us</a></li>
+              <li><a href="/en/#contacto" class="nav-link">Contact</a></li>
+            </>
+          ) : (
+            <>
+              <li><a href="/" class="nav-link">Inicio</a></li>
+              <li><a href="/productos" class="nav-link">Productos</a></li>
+              <li><a href="/#nosotros" class="nav-link">Nosotros</a></li>
+              <li><a href="/#contacto" class="nav-link">Contacto</a></li>
+            </>
+          )}
+        </ul>
+      </nav>
 
-      {/* Selector de Idioma + CTA */}
+      {/* Selector de Idioma + CTA - CON LINKS REALES */}
       <div class="header-actions">
         <div class="language-switcher">
-          <button class="lang-btn active">ES</button>
-          <span class="lang-separator">|</span>
-          <button class="lang-btn">EN</button>
+          {Astro.url.pathname.startsWith('/en/') ? (
+            <>
+              {/* Estás en INGLÉS: ES es clickable, EN está activo */}
+              <a href="/" class="lang-btn">ES</a>
+              <span class="lang-separator">|</span>
+              <span class="lang-btn active">EN</span>
+            </>
+          ) : (
+            <>
+              {/* Estás en ESPAÑOL: ES está activo, EN es clickable */}
+              <span class="lang-btn active">ES</span>
+              <span class="lang-separator">|</span>
+              <a href="/en/" class="lang-btn">EN</a>
+            </>
+          )}
         </div>
-        <a href="/clientes" class="btn-cotizar">Clientes</a>
+  {/* ✅ Botón Clientes DINÁMICO */}
+  <a href={Astro.url.pathname.startsWith('/en/') ? '/en/clientes' : '/clientes'} class="btn-cotizar">
+  {Astro.url.pathname.startsWith('/en/') ? 'Clients' : 'Clientes'}
+  </a>
       </div>
 
       {/* Menú Mobile Toggle */}
@@ -41,21 +67,36 @@
     </div>
   </div>
 
-  {/* Menú Mobile */}
+  {/* Menú Mobile - Dinámico según idioma */}
   <div class="nav-mobile" id="navMobile">
     <ul class="nav-mobile-list">
-  <li><a href="/" class="nav-mobile-link">Inicio</a></li>
-  <li><a href="/productos" class="nav-mobile-link">Productos</a></li>
-  <li><a href="/#nosotros" class="nav-mobile-link">Nosotros</a></li>
-  <li><a href="/#contacto" class="nav-mobile-link">Contacto</a></li>
-  
-  {/* Botón Cotizar dentro del menú mobile */}
-  <li class="nav-mobile-cta">
-    <a href="/clientes" class="btn btn-primary" style="width: 100%; justify-content: center;">
-      Acceso Clientes
-    </a>
-  </li>
-</ul>
+      {Astro.url.pathname.startsWith('/en/') ? (
+        <>
+          <li><a href="/en/" class="nav-mobile-link">Home</a></li>
+          <li><a href="/en/productos" class="nav-mobile-link">Products</a></li>
+          <li><a href="/en/#nosotros" class="nav-mobile-link">About Us</a></li>
+          <li><a href="/en/#contacto" class="nav-mobile-link">Contact</a></li>
+          {/* ✅ Botón Clientes en Mobile - Versión EN */}
+          <li class="nav-mobile-cta">
+            <a href="/en/clientes" class="btn btn-primary" style="width: 100%; justify-content: center;">
+              Client Portal
+            </a>
+          </li>
+        </>
+      ) : (
+        <>
+          <li><a href="/" class="nav-mobile-link">Inicio</a></li>
+          <li><a href="/productos" class="nav-mobile-link">Productos</a></li>
+          <li><a href="/#nosotros" class="nav-mobile-link">Nosotros</a></li>
+          <li><a href="/#contacto" class="nav-mobile-link">Contacto</a></li>
+          <li class="nav-mobile-cta">
+            <a href="/clientes" class="btn btn-primary" style="width: 100%; justify-content: center;">
+              Acceso Clientes
+            </a>
+          </li>
+        </>
+      )}
+    </ul>
   </div>
 </header>
 
@@ -122,7 +163,7 @@
     display: flex;
     align-items: center;
     transition: opacity 0.2s ease;
-    flex-shrink: 0; /* Evita que se encoja */
+    flex-shrink: 0;
   }
 
   .logo:hover {
@@ -140,37 +181,30 @@
     height: 70px;
   }
 
-  /* Responsive Mobile */
   @media (max-width: 1024px) {
     .logo-image {
-      height: 70px;  /* Mobile base: 70px */
+      height: 70px;
     }
-
     .header-scrolled .logo-image {
-      height: 60px;  /* Mobile scroll: 60px (NO más pequeño) */
+      height: 60px;
     }
-
     .header-content {
       padding: 1rem 0;
     }
-
     .header-scrolled .header-content {
       padding: 0.75rem 0;
     }
   }
 
-  /* Mobile muy pequeño */
   @media (max-width: 480px) {
     .logo-image {
-      height: 60px;  /* Mínimo seguro: 60px */
+      height: 60px;
     }
-
     .header-scrolled .logo-image {
-      height: 55px;  /* Scroll en móvil pequeño: 55px */
+      height: 55px;
     }
   }
 
-  /* Navegación Desktop */
   .nav-desktop {
     display: none;
   }
@@ -215,7 +249,6 @@
     width: 100%;
   }
 
-  /* Header Actions */
   .header-actions {
     display: flex;
     align-items: center;
@@ -228,6 +261,7 @@
     gap: 0.5rem;
   }
 
+  /* ✅ IMPORTANTE: Los lang-btn que SON links deben parecer botones */
   .lang-btn {
     background: none;
     border: none;
@@ -238,6 +272,12 @@
     cursor: pointer;
     padding: 0.25rem 0.5rem;
     transition: color var(--transition-fast);
+    text-decoration: none;
+  }
+
+  /* ✅ Cuando es un <a>, quitamos el underline por defecto */
+  a.lang-btn {
+    text-decoration: none;
   }
 
   .lang-btn:hover,
@@ -266,7 +306,6 @@
     box-shadow: var(--shadow-md);
   }
 
-  /* Mobile Toggle */
   .mobile-toggle {
     display: flex;
     flex-direction: column;
@@ -326,7 +365,6 @@
     bottom: 0;
   }
 
-  /* Menú Mobile */
   .nav-mobile {
     position: fixed;
     top: 0;
@@ -364,7 +402,6 @@
     color: var(--color-primary);
   }
 
-  /* Overlay para mobile */
   .nav-mobile-overlay {
     position: fixed;
     top: 0;
@@ -382,33 +419,26 @@
     opacity: 1;
     visibility: visible;
   }
-  /* =========================================
-     MOBILE: Header Actions + Toggle
-     ========================================= */
+
   @media (max-width: 1023px) {
-    /* Mostrar solo selector de idioma en header mobile */
     .header-actions .language-switcher {
       display: flex;
     }
     
-    /* Ocultar botón Cotizar del header en mobile (va en el menú) */
     .header-actions .btn-cotizar {
       display: none;
     }
 
-    /* Asegurar que el toggle hamburguesa sea visible y esté al final */
     .mobile-toggle {
       display: flex !important;
       margin-left: 0.5rem;
       z-index: 1001;
     }
 
-    /* Ajustar gap en header mobile para que quepa todo */
     .header-content {
       gap: 1rem;
     }
 
-    /* CTA dentro del menú mobile */
     .nav-mobile-cta {
       margin-top: 2.5rem;
       padding-top: 1.5rem;
@@ -421,5 +451,5 @@
       padding: 1rem;
       font-size: 1rem;
     }
-  }  
+  }
 </style>

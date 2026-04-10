@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Permitir todo el sitio
+Sitemap: https://exportsurberries.cl/sitemap-index.xml
+
+# Evitar indexar rutas internas si las hay
+# Disallow: /admin/
+# Disallow: /clientes/

@@ -16,23 +16,102 @@ import WhatsAppFloat from '../components/WhatsAppFloat.astro';
 <!doctype html>
 <html lang={lang}>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="generator" content={Astro.generator} />
-    
-    <title>{title} | Exportadora Surberries</title>
-    <meta name="description" content={description} />
-    
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
-    <meta property="og:locale" content={lang === 'es' ? 'es_CL' : 'en_US'} />
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
-  </head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="generator" content={Astro.generator} />
+  
+  {/* SEO Básico + Keywords */}
+  <title>{title} | Exportadora Surberries</title>
+  <meta name="description" content={description} />
+  <meta name="keywords" content="frutillas congeladas, arándanos IQF, frambuesas exportación, espárragos congelados, frutas congeladas Chile, exportadora de berries, IQF frozen fruits, Chilean berries exporter, frozen strawberries, frozen blueberries" />
+  <meta name="author" content="Exportadora Surberries" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href={`https://exportsurberries.cl${Astro.url.pathname}`} />
+  
+  {/* Open Graph / Facebook */}
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={`https://exportsurberries.cl${Astro.url.pathname}`} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content="https://exportsurberries.cl/images/og-image.jpg" />
+  <meta property="og:locale" content={lang === 'es' ? 'es_CL' : 'en_US'} />
+  <meta property="og:site_name" content="Exportadora Surberries" />
+  
+  {/* Twitter / X */}
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content={`https://exportsurberries.cl${Astro.url.pathname}`} />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content="https://exportsurberries.cl/images/og-image.jpg" />
+  
+  {/* Structured Data - Schema.org (JSON-LD) */}
+  <script type="application/ld+json">
+    {JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Exportadora Surberries",
+      "url": "https://exportsurberries.cl",
+      "logo": "https://exportsurberries.cl/images/logo-surberries.png",
+      "description": description,
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Isabel Riquelme 506",
+        "addressLocality": "Chillán",
+        "addressRegion": "Ñuble",
+        "addressCountry": "CL"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+56-9-5900-8508",
+        "contactType": "sales",
+        "areaServed": ["CL", "US", "CA", "MX", "BR", "AR", "CN", "ES", "NL", "DE"],
+        "availableLanguage": ["Spanish", "English"]
+      },
+      "sameAs": [
+        "https://www.linkedin.com/company/exportsurberries",
+        "https://www.instagram.com/exportsurberries"
+      ]
+    })}
+  </script>
+  
+  {/* Structured Data - Products */}
+  <script type="application/ld+json">
+    {JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": "IQF Frozen Berries",
+      "brand": { "@type": "Brand", "name": "Surberries" },
+      "offers": {
+        "@type": "Offer",
+        "availability": "https://schema.org/InStock",
+        "priceCurrency": "USD",
+        "price": "0",
+        "priceSpecification": {
+          "@type": "UnitPriceSpecification",
+          "priceType": "https://schema.org/B2B",
+          "eligibleRegion": { "@type": "Country", "name": "Worldwide" }
+        }
+      },
+      "category": "Frozen Fruits",
+      "productGroupID": "IQF-BERRIES-CL"
+    })}
+  </script>
+  
+  {/* Fuentes Google */}
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  
+  {/* Analytics - Umami (Self-hosted, privacy-focused) */}
+  {import.meta.env.PROD && (
+    <script 
+      defer 
+      src="https://analytics.exportsurberries.cl/script.js" 
+      data-website-id="TU_WEBSITE_ID_AQUI"
+    ></script>
+  )}
+</head>
   <body>
     <Header />      <!-- ✅ AGREGAR ESTO -->
     
@@ -40,6 +119,24 @@ import WhatsAppFloat from '../components/WhatsAppFloat.astro';
     
     <Footer />
     <WhatsAppFloat />
+
+  {/* Analytics Tracking */}
+  <script>
+    // Track pageview (excluyendo admin)
+    if (window.location.pathname !== '/admin/analytics') {
+      fetch('/api/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          pathname: window.location.pathname,
+          title: document.title,
+          referrer: document.referrer
+        })
+      }).catch(err => console.error('Analytics error:', err));
+    }
+  </script>
+</body>
+
   </body>
 </html>
 

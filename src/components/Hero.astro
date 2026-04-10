@@ -1,5 +1,5 @@
 ---
-// Componente Hero Section - Primera impresión épica
+// Componente Hero Section - Primera impresión épica - BILINGÜE
 ---
 
 <section class="hero" id="inicio">
@@ -22,43 +22,69 @@
     <div class="hero-content">
       <div class="hero-text fade-in-up">
         <h1 class="hero-title">
-          Frutos Congelados Premium
-          <span class="hero-subtitle-line">Desde Chile para el Mundo</span>
+          {Astro.url.pathname.startsWith('/en/') 
+            ? 'Premium Frozen Fruits' 
+            : 'Frutos Congelados Premium'}
+          <span class="hero-subtitle-line">
+            {Astro.url.pathname.startsWith('/en/')
+              ? 'From Chile to the World'
+              : 'Desde Chile para el Mundo'}
+          </span>
         </h1>
         
         <p class="hero-description">
-          Exportamos frutillas, frambuesas y arándanos de la más alta calidad. 
-          Conectamos el origen chileno con mercados internacionales, garantizando 
-          frescura, trazabilidad y cumplimiento en cada exportación.
+          {Astro.url.pathname.startsWith('/en/')
+            ? 'We export strawberries, raspberries, and blueberries of the highest quality. We connect Chilean origin with international markets, ensuring freshness, traceability, and compliance in every shipment.'
+            : 'Exportamos frutillas, frambuesas y arándanos de la más alta calidad. Conectamos el origen chileno con mercados internacionales, garantizando frescura, trazabilidad y cumplimiento en cada exportación.'}
         </p>
 
         <div class="hero-actions">
-          <a href="#productos" class="btn btn-primary btn-lg">
-            <span>Conocer Productos</span>
+          <a 
+            href={Astro.url.pathname.startsWith('/en/') ? '/en/productos' : '/productos'} 
+            class="btn btn-primary btn-lg"
+          >
+            <span>
+              {Astro.url.pathname.startsWith('/en/') ? 'View Products' : 'Conocer Productos'}
+            </span>
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </a>
-            <a href="/cotizar" class="btn btn-outline btn-lg">
-            Solicitar Cotización
-            </a>
+          <a 
+            href={Astro.url.pathname.startsWith('/en/') ? '/en/cotizar' : '/cotizar'} 
+            class="btn btn-outline btn-lg"
+          >
+            {Astro.url.pathname.startsWith('/en/') ? 'Request a Quote' : 'Solicitar Cotización'}
+          </a>
         </div>
 
         {/* Stats */}
         <div class="hero-stats">
           <div class="stat-item">
             <div class="stat-number">+15</div>
-            <div class="stat-label">Años de experiencia</div>
+            <div class="stat-label">
+              {Astro.url.pathname.startsWith('/en/')
+                ? 'Years of experience'
+                : 'Años de experiencia'}
+            </div>
           </div>
           <div class="stat-divider"></div>
           <div class="stat-item">
             <div class="stat-number">+30</div>
-            <div class="stat-label">Países alcanzados</div>
+            <div class="stat-label">
+              {Astro.url.pathname.startsWith('/en/')
+                ? 'Countries reached'
+                : 'Países alcanzados'}
+            </div>
           </div>
           <div class="stat-divider"></div>
           <div class="stat-item">
             <div class="stat-number">100%</div>
-            <div class="stat-label">Calidad certificada</div>
+            <div class="stat-label">
+              {Astro.url.pathname.startsWith('/en/')
+                ? 'Certified quality'
+                : 'Calidad certificada'}
+            </div>
           </div>
         </div>
       </div>

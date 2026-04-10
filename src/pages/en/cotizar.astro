@@ -1,0 +1,518 @@
+---
+// Quote Page - Exportadora Surberries
+// Simple form with unique ID + WhatsApp + Netlify Forms
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Request a Quote" description="Request a personalized quote for IQF frozen strawberries, raspberries, and blueberries." lang="en">
+  
+  <main class="cotizar-page">
+    <div class="container-custom">
+      <div class="cotizar-header">
+        <h2>Request a Quote</h2>
+        <p>Complete the form, and we will contact you shortly. You can also reach out to us directly via WhatsApp.</p>
+      </div>
+
+      <div class="cotizar-container">
+        {/* Main Form */}
+        <form class="cotizar-form" id="cotizarForm" name="cotizar" method="POST" data-netlify="true">
+          {/* Hidden field for Netlify Forms */}
+          <input type="hidden" name="form-name" value="cotizar" />
+          
+          {/* Honeypot field for spam (Netlify) */}
+          <p class="hidden" style="display: none;">
+            <label>
+              Don't fill this if you're human:
+              <input name="bot-field" />
+            </label>
+          </p>
+
+          {/* Quote ID (auto-generated) */}
+          <div class="cotizacion-id-card">
+            <span class="id-label">Quote ID:</span>
+            <span class="id-value" id="cotizacionId">Generating...</span>
+            <input type="hidden" id="cotizacionIdInput" name="cotizacion_id" />
+          </div>
+
+          <div class="form-grid">
+            {/* Name */}
+            <div class="form-group">
+              <label for="nombre">Name *</label>
+              <input type="text" id="nombre" name="nombre" required placeholder="Your name" />
+            </div>
+
+            {/* Company */}
+            <div class="form-group">
+              <label for="empresa">Company *</label>
+              <input type="text" id="empresa" name="empresa" required placeholder="Your company name" />
+            </div>
+
+            {/* Email */}
+            <div class="form-group">
+              <label for="email">Email *</label>
+              <input type="email" id="email" name="email" required placeholder="your@email.com" />
+            </div>
+
+            {/* Phone */}
+            <div class="form-group">
+              <label for="telefono">Phone / WhatsApp *</label>
+              <input type="tel" id="telefono" name="telefono" required placeholder="+1 234 567 8900" />
+            </div>
+
+            {/* Country */}
+            <div class="form-group">
+              <label for="pais">Destination Country *</label>
+              <select id="pais" name="pais" required>
+                <option value="">Select a country</option>
+                <option value="USA">United States</option>
+                <option value="CAN">Canada</option>
+                <option value="MEX">Mexico</option>
+                <option value="BRA">Brazil</option>
+                <option value="ARG">Argentina</option>
+                <option value="CHN">China</option>
+                <option value="ESP">Spain</option>
+                <option value="NLD">Netherlands</option>
+                <option value="DEU">Germany</option>
+                <option value="OTH">Other</option>
+              </select>
+            </div>
+
+            {/* Product */}
+            <div class="form-group">
+              <label for="producto">Product of Interest *</label>
+              <select id="producto" name="producto" required>
+                <option value="">Select a product</option>
+                <option value="frutilla">IQF Strawberries</option>
+                <option value="frambuesa">IQF Raspberries</option>
+                <option value="arandano">IQF Blueberries</option>
+                <option value="mix">Berries Mix</option>
+                <option value="otros">Other Products</option>
+              </select>
+            </div>
+
+            {/* Volume */}
+            <div class="form-group">
+              <label for="volumen">Estimated Volume (kg) *</label>
+              <input type="number" id="volumen" name="volumen" required min="100" placeholder="Ex: 1000" />
+            </div>
+
+            {/* Date */}
+            <div class="form-group">
+              <label for="fecha">Required delivery date?</label>
+              <input type="date" id="fecha" name="fecha" />
+            </div>
+          </div>
+
+          {/* Specifications */}
+          <div class="form-group full-width">
+            <label for="especificaciones">Additional specifications</label>
+            <textarea id="especificaciones" name="especificaciones" rows="4" placeholder="Packaging specifications, freezing grade, required certifications, etc."></textarea>
+          </div>
+
+          {/* Submit Buttons */}
+          <div class="form-actions">
+            <button type="button" class="btn btn-whatsapp" id="sendWhatsApp">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+              </svg>
+              WhatsApp
+            </button>
+            <button type="submit" class="btn btn-outline">
+              Email
+            </button>
+          </div>
+
+          {/* Success Message */}
+          <div class="form-success" id="formSuccess" style="display: none;">
+            <p>✅ Quote sent! We'll contact you within 24 hours.</p>
+            <p class="success-id">ID: <span id="successId"></span></p>
+          </div>
+        </form>
+
+        {/* Sidebar Info */}
+        <aside class="cotizar-info">
+          <div class="info-card">
+            <h4>Why request a quote with us?</h4>
+            <ul class="info-list">
+              <li>✅ Response within 24 hours</li>
+              <li>✅ Competitive FOB/CIF pricing</li>
+              <li>✅ International certifications</li>
+              <li>✅ Integrated logistics</li>
+              <li>✅ Support in Spanish and English</li>
+            </ul>
+          </div>
+
+          <div class="info-card highlight">
+            <h4>Prefer direct contact?</h4>
+            <a href="https://wa.me/56959008508?text=Hello,%20I'm%20interested%20in%20requesting%20a%20quote%20for%20Surberries%20products" 
+               class="btn btn-secondary" 
+               target="_blank" 
+               rel="noopener noreferrer">
+              Direct WhatsApp
+            </a>
+            <p class="info-contact">
+              📧 contacto@exportsurberries.cl<br />
+              📱 +56 9 5900 8508
+            </p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Generate unique quote ID
+    function generateCotizacionId() {
+      const date = new Date();
+      const dateStr = date.toISOString().slice(0, 10).replace(/-/g, ''); // YYYYMMDD
+      const random = Math.random().toString(36).substring(2, 8).toUpperCase(); // 6 chars random
+      return `COT-${dateStr}-${random}`;
+    }
+
+    // Initialize ID on load
+    const cotizacionIdEl = document.getElementById('cotizacionId');
+    const cotizacionIdInput = document.getElementById('cotizacionIdInput');
+    
+    if (cotizacionIdEl && cotizacionIdInput) {
+      const id = generateCotizacionId();
+      cotizacionIdEl.textContent = id;
+      cotizacionIdInput.value = id;
+    }
+
+    // Form logic
+    const form = document.getElementById('cotizarForm');
+    const btnWhatsApp = document.getElementById('sendWhatsApp');
+    const formSuccess = document.getElementById('formSuccess');
+    const successId = document.getElementById('successId');
+
+    // Send via WhatsApp
+    btnWhatsApp?.addEventListener('click', () => {
+      const cotizacionId = cotizacionIdInput?.value || generateCotizacionId();
+      const nombre = document.getElementById('nombre').value;
+      const empresa = document.getElementById('empresa').value;
+      const email = document.getElementById('email').value;
+      const telefono = document.getElementById('telefono').value;
+      const pais = document.getElementById('pais').options[document.getElementById('pais').selectedIndex]?.text || '';
+      const producto = document.getElementById('producto').options[document.getElementById('producto').selectedIndex]?.text || '';
+      const volumen = document.getElementById('volumen').value;
+      const fecha = document.getElementById('fecha').value;
+      const especificaciones = document.getElementById('especificaciones').value;
+
+      // Validate required fields
+      if (!nombre || !empresa || !email || !telefono || !pais || !producto || !volumen) {
+        alert('Please complete the required fields (*)');
+        return;
+      }
+
+      // Build formatted message
+      const mensaje = `🍓 *New Surberries Quote*%0A%0A` +
+        `*Quote ID:* ${cotizacionId}%0A` +
+        `━━━━━━━━━━━━━━━━━━━━━━%0A%0A` +
+        `*👤 Contact:*%0A` +
+        `• Name: ${nombre}%0A` +
+        `• Company: ${empresa}%0A` +
+        `• Email: ${email}%0A` +
+        `• Phone: ${telefono}%0A%0A` +
+        `*📦 Product:*%0A` +
+        `• Type: ${producto}%0A` +
+        `• Volume: ${volumen} kg%0A` +
+        `• Destination country: ${pais}%0A` +
+        (fecha ? `• Required date: ${fecha}%0A` : '') +
+        (especificaciones ? `%0A*📝 Specifications:*%0A${especificaciones}%0A` : '');
+
+      // Open WhatsApp
+      const url = `https://wa.me/56959008508?text=${mensaje}`;
+      window.open(url, '_blank');
+    });
+
+    // Send via Email (Netlify Forms)
+    form?.addEventListener('submit', async (e) => {
+      const originalSubmit = form.submit;
+      
+      // Show success message after 500ms (time for Netlify to capture)
+      setTimeout(() => {
+        formSuccess.style.display = 'block';
+        successId.textContent = cotizacionIdInput?.value || 'N/A';
+        form.reset();
+        
+        // Generate new ID
+        const newId = generateCotizacionId();
+        cotizacionIdEl.textContent = newId;
+        cotizacionIdInput.value = newId;
+
+        // Hide message after 5 seconds
+        setTimeout(() => {
+          formSuccess.style.display = 'none';
+        }, 5000);
+      }, 500);
+    });
+  </script>
+
+  <style>
+    .cotizar-page {
+      padding: 10rem 0 4rem;
+      background: var(--color-off-white);
+      min-height: 100vh;
+    }
+
+    .cotizar-header {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 4rem;
+    }
+
+    .cotizar-header h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--color-gray-900);
+    }
+
+    .cotizar-header p {
+      font-size: 1.125rem;
+      color: var(--color-gray-600);
+    }
+
+    .cotizar-container {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    .cotizar-form {
+      background: var(--color-white);
+      padding: 2.5rem;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* Quote ID Card */
+    .cotizacion-id-card {
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+      color: var(--color-white);
+      padding: 1rem 1.5rem;
+      border-radius: var(--radius-md);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      font-family: var(--font-sans);
+    }
+
+    .id-label {
+      font-weight: 500;
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    .id-value {
+      font-weight: 700;
+      font-size: 1.125rem;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 1px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--color-gray-800);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: 0.875rem 1rem;
+      border: 2px solid var(--color-gray-200);
+      border-radius: var(--radius-md);
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      transition: border-color var(--transition-fast);
+      background: var(--color-white);
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .form-actions .btn {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .btn-whatsapp {
+      background: #25D366;
+      color: var(--color-white);
+    }
+
+    .btn-whatsapp:hover {
+      background: #1EBE57;
+      color: var(--color-white);
+    }
+
+    /* Success Message */
+    .form-success {
+      background: rgba(34, 139, 34, 0.1);
+      border: 2px solid var(--color-secondary);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.5rem;
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+
+    .form-success p {
+      color: var(--color-secondary-dark);
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .success-id {
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      margin-top: 0.5rem !important;
+    }
+
+    /* Sidebar Info */
+    .cotizar-info {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .info-card {
+      background: var(--color-white);
+      padding: 2rem;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+    }
+
+    .info-card h4 {
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+      color: var(--color-gray-900);
+    }
+
+    .info-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .info-list li {
+      font-size: 0.95rem;
+      color: var(--color-gray-600);
+    }
+
+    /* Highlight Card - Force colors */
+    .info-card.highlight {
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+      color: #FFFFFF !important;
+      text-align: center;
+    }
+
+    .info-card.highlight h4 {
+      color: #FFFFFF !important;
+    }
+
+    .info-card.highlight p {
+      color: #FFFFFF !important;
+    }
+
+    .info-card.highlight .btn {
+      background: #25D366;
+      color: #FFFFFF !important;
+    }
+
+    .info-card.highlight .btn:hover {
+      background: #1EBE57;
+      color: #FFFFFF !important;
+    }
+
+    /* Contact Info - Force white */
+    .info-contact {
+      font-size: 0.95rem;
+      color: #FFFFFF !important;
+      opacity: 1;
+      line-height: 1.6;
+      font-weight: 600;
+    }
+
+    .info-contact a {
+      color: #FFFFFF !important;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .info-contact a:hover {
+      color: #FFD44D !important;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .cotizar-container {
+        grid-template-columns: 1fr;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .cotizar-page {
+        padding: 6rem 0 3rem;
+      }
+
+      .cotizar-form {
+        padding: 2rem 1.5rem;
+      }
+
+      .form-actions {
+        flex-direction: column;
+      }
+
+      .form-actions .btn {
+        width: 100%;
+      }
+
+      .cotizacion-id-card {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+      }
+    }
+  </style>
+
+</Layout>

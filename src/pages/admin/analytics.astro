@@ -1,0 +1,462 @@
+---
+// Analytics Dashboard - Client-Side Auth
+import Layout from '../../layouts/Layout.astro';
+
+// 🔐 Password
+const ADMIN_PASSWORD = "123456";
+
+// Importar fs
+import fs from 'fs/promises';
+import path from 'path';
+
+// Deshabilitar prerendering
+export const prerender = false;
+
+// Leer datos (si existen)
+let analytics = { pages: {}, total: 0, dates: {}, referrers: {} };
+let hasData = false;
+
+try {
+  const analyticsFile = path.join(process.cwd(), 'src', 'data', 'analytics.json');
+  const content = await fs.readFile(analyticsFile, 'utf-8');
+  analytics = JSON.parse(content);
+  hasData = true;
+} catch (e) {
+  // No hay datos aún
+}
+
+// Calcular estadísticas
+const topPages = Object.entries(analytics.pages || {})
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 10);
+
+const last7Days = Object.entries(analytics.dates || {})
+  .sort((a, b) => b[0].localeCompare(a[0]))
+  .slice(0, 7)
+  .reverse();
+
+const topReferrers = Object.entries(analytics.referrers || {})
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 5);
+
+const totalPages = Object.values(analytics.pages || {}).reduce((a, b) => a + b, 0) || 0;
+---
+
+<Layout title="Analytics" description="Dashboard privado" lang="es">
+  
+  <main class="admin-analytics">
+    <div class="container-custom">
+      <div class="admin-header">
+        <h1>📊 Analytics Dashboard</h1>
+        <p>Exportadora Surberries - Estadísticas Privadas</p>
+      </div>
+
+      {/* Login Screen */}
+      <div id="loginScreen" class="login-box">
+        <div class="login-icon">🔐</div>
+        <h2>Acceso Restringido</h2>
+        <p>Ingresa la contraseña para ver las estadísticas</p>
+        
+        <div class="password-input-group">
+          <input 
+            type="password" 
+            id="passwordInput" 
+            placeholder="Ingresa la contraseña..."
+            class="password-input"
+          />
+          <button onclick="checkPassword()" class="btn btn-primary">
+            Acceder
+          </button>
+        </div>
+        
+        <div class="login-hint">
+  <p><small>YatuSabes</small></p>
+</div>
+        
+        <a href="/" class="btn btn-outline">← Volver al Sitio</a>
+      </div>
+
+      {/* Dashboard (se muestra con JS) */}
+      <div id="dashboard" style="display: none;">
+        {hasData ? (
+          <>
+            {/* Stats Generales */}
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-icon">👁️</div>
+                <div class="stat-value">{analytics.total || 0}</div>
+                <div class="stat-label">Total Pageviews</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon">📄</div>
+                <div class="stat-value">{Object.keys(analytics.pages || {}).length}</div>
+                <div class="stat-label">Páginas Únicas</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon">📅</div>
+                <div class="stat-value">{Object.keys(analytics.dates || {}).length}</div>
+                <div class="stat-label">Días Activos</div>
+              </div>
+            </div>
+
+            {/* Top Páginas */}
+            <div class="section">
+              <h2>🔝 Top 10 Páginas Más Visitadas</h2>
+              <div class="table-container">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Página</th>
+                      <th>Visitas</th>
+                      <th>% del Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {topPages.map(([page, views]) => (
+                      <tr>
+                        <td><code>{page}</code></td>
+                        <td><strong>{views}</strong></td>
+                        <td>{((views / totalPages) * 100).toFixed(1)}%</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Fuentes de Tráfico */}
+            {topReferrers.length > 0 && (
+              <div class="section">
+                <h2>🔗 Fuentes de Tráfico</h2>
+                <div class="table-container">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>Fuente</th>
+                        <th>Visitas</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {topReferrers.map(([source, visits]) => (
+                        <tr>
+                          <td><code>{source}</code></td>
+                          <td><strong>{visits}</strong></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {/* Últimos 7 días */}
+            {last7Days.length > 0 && (
+              <div class="section">
+                <h2>📈 Tráfico Últimos 7 Días</h2>
+                <div class="bar-chart">
+                  {last7Days.map(([date, views]) => {
+                    const maxViews = Math.max(...last7Days.map(([,v]) => v));
+                    const width = maxViews > 0 ? (views / maxViews) * 100 : 0;
+                    
+                    return (
+                      <div class="bar-item">
+                        <div class="bar-label">{date}</div>
+                        <div class="bar-wrapper">
+                          <div class="bar-fill" style={`width: ${width}%`}></div>
+                        </div>
+                        <div class="bar-value">{views}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
+          <div class="alert alert-warning">
+            📊 No hay datos aún. Visita algunas páginas del sitio primero.
+          </div>
+        )}
+
+        <div class="admin-footer">
+          <button onclick="logout()" class="btn btn-outline">Cerrar Sesión</button>
+          <button 
+            onclick="if(confirm('¿Borrar todos los datos?')) { fetch('/api/clear', {method: 'POST'}).then(() => location.reload()); }"
+            class="btn btn-secondary"
+          >
+            🗑️ Borrar Datos
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+  // ✅ Password hardcodeada
+  const ADMIN_PASSWORD = "123456";
+  
+  // ✅ Hacer logout GLOBAL
+  window.logout = function() {
+    sessionStorage.removeItem('analyticsAuth');
+    location.reload();
+  };
+  
+  // ✅ Hacer checkPassword GLOBAL
+  window.checkPassword = function() {
+    const input = document.getElementById('passwordInput').value;
+    if (input === ADMIN_PASSWORD) {
+      showDashboard();
+    } else {
+      alert('❌ Contraseña incorrecta');
+    }
+  };
+  
+  // ✅ Función interna
+  function showDashboard() {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    sessionStorage.setItem('analyticsAuth', 'true');
+  }
+  
+  // ✅ Checkear si ya está autenticado al cargar
+  if (sessionStorage.getItem('analyticsAuth') === 'true') {
+    showDashboard();
+  }
+  
+  // ✅ Enter key en input
+  document.getElementById('passwordInput')?.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      window.checkPassword();
+    }
+  });
+</script>
+
+  <style>
+    .admin-analytics {
+      padding: 8rem 0 4rem;
+      min-height: 100vh;
+      background: var(--color-off-white);
+    }
+
+    .admin-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .admin-header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--color-gray-900);
+    }
+
+    .login-box {
+      max-width: 500px;
+      margin: 4rem auto;
+      background: var(--color-white);
+      padding: 3rem;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl);
+      text-align: center;
+    }
+
+    .login-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .password-input-group {
+      display: flex;
+      gap: 1rem;
+      margin: 2rem 0;
+      justify-content: center;
+    }
+
+    .password-input {
+      flex: 1;
+      max-width: 300px;
+      padding: 1rem;
+      border: 2px solid var(--color-gray-200);
+      border-radius: var(--radius-md);
+      font-size: 1rem;
+      text-align: center;
+    }
+
+    .password-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+
+    .login-hint {
+      background: var(--color-gray-100);
+      padding: 1rem;
+      border-radius: var(--radius-md);
+      margin: 1.5rem 0;
+    }
+
+    .login-hint code {
+      background: var(--color-gray-900);
+      color: var(--color-accent);
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-md);
+      font-family: monospace;
+      font-size: 1rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .stat-card {
+      background: var(--color-white);
+      padding: 2rem;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-md);
+      text-align: center;
+    }
+
+    .stat-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .stat-value {
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--color-primary);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 1rem;
+      color: var(--color-gray-600);
+    }
+
+    .section {
+      background: var(--color-white);
+      padding: 2rem;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-md);
+      margin-bottom: 2rem;
+    }
+
+    .section h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--color-gray-900);
+    }
+
+    .table-container {
+      overflow-x: auto;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .data-table th,
+    .data-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--color-gray-200);
+    }
+
+    .data-table th {
+      background: var(--color-gray-50);
+      font-weight: 600;
+      color: var(--color-gray-900);
+    }
+
+    .data-table code {
+      background: var(--color-gray-100);
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--radius-md);
+      font-family: monospace;
+      font-size: 0.875rem;
+    }
+
+    .bar-chart {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .bar-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .bar-label {
+      min-width: 120px;
+      font-size: 0.875rem;
+      color: var(--color-gray-600);
+      font-family: monospace;
+    }
+
+    .bar-wrapper {
+      flex: 1;
+      height: 30px;
+      background: var(--color-gray-100);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+      transition: width 0.5s ease;
+    }
+
+    .bar-value {
+      min-width: 50px;
+      font-weight: 600;
+      color: var(--color-gray-900);
+      text-align: right;
+    }
+
+    .admin-footer {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 3rem;
+    }
+
+    .alert {
+      padding: 2rem;
+      border-radius: var(--radius-lg);
+      text-align: center;
+      font-size: 1.125rem;
+      background: #fff3cd;
+      border: 2px solid #ffc107;
+      color: #856404;
+    }
+
+    @media (max-width: 768px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .password-input-group {
+        flex-direction: column;
+      }
+      
+      .password-input {
+        max-width: 100%;
+      }
+      
+      .bar-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .bar-label {
+        min-width: auto;
+      }
+    }
+  </style>
+</Layout>
