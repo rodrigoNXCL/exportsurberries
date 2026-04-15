@@ -1,19 +1,17 @@
 ---
-// Página Portal de Clientes - Exportadora Surberries
-// Placeholder para futuro módulo de autenticación
+// Client Portal Page - Exportadora Surberries
+// Access to protected quote generator
 import Layout from '../../layouts/Layout.astro';
-
 ---
 
-<Layout title="Customer Portal" description="Access your order information, documents, and purchase history." lang="en">
-
+<Layout title="Client Portal" description="Access the professional quote generator and restricted client area." lang="en">
   
   <main class="client-portal-page">
     <div class="container-custom">
       <div class="portal-content">
         <div class="portal-header">
-          <h2>Customer Portal</h2>
-          <p>Access your order information, documents, and purchase history.</p>
+          <h2>Client Portal</h2>
+          <p>Restricted area for professional quote generation and document management.</p>
         </div>
 
         <div class="portal-login-card">
@@ -24,35 +22,48 @@ import Layout from '../../layouts/Layout.astro';
             </svg>
           </div>
 
-          <h3>Login</h3>
+          <h3>🔐 Restricted Access</h3>
           <p class="login-description">
-            The client portal will be available soon. 
-            If you are already a customer, please contact us to activate your access.
+            Access the professional quote generator with Exportadora Sur Berries SpA data.
+            Requires password provided by our commercial team.
           </p>
 
           <div class="login-actions">
-            <a href="/cotizar" class="btn btn-primary">
-              Get a Quote
+            {/* MAIN BUTTON - Quote Portal */}
+            <a href="/portal" class="btn btn-primary btn-portal-access">
+              🔐 Restricted Access
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </a>
+            
+            {/* Secondary buttons */}
+            <a href="/en/cotizar" class="btn btn-outline">
+              Public Quote
             </a>
             <a href="mailto:contacto@exportsurberries.cl" class="btn btn-outline">
-              Contact Us
+              Support
             </a>
           </div>
 
           <div class="login-features">
             <div class="feature-item">
-              <span class="feature-icon">📦</span>
-              <span>Order Status</span>
-            </div>
-            <div class="feature-item">
               <span class="feature-icon">📄</span>
-              <span>Documentation & Compliance</span>
+              <span>Generate professional PDF</span>
             </div>
             <div class="feature-item">
-              <span class="feature-icon">📊</span>
-              <span>Order History</span>
+              <span class="feature-icon">💰</span>
+              <span>USD / CLP auto-calculated</span>
+            </div>
+            <div class="feature-item">
+              <span class="feature-icon">🔢</span>
+              <span>Auto-generated quote ID</span>
             </div>
           </div>
+          
+          <p class="portal-note">
+            <small>⚠️ Password is confidential. If you don't have it, contact us.</small>
+          </p>
         </div>
       </div>
     </div>
@@ -61,6 +72,7 @@ import Layout from '../../layouts/Layout.astro';
 </Layout>
 
 <style>
+  /* Mismos estilos que la versión en español */
   .client-portal-page {
     padding: 10rem 0 4rem;
     min-height: 80vh;
@@ -95,6 +107,18 @@ import Layout from '../../layouts/Layout.astro';
     border-radius: var(--radius-xl);
     padding: 3rem 2.5rem;
     box-shadow: var(--shadow-xl);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .portal-login-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-primary-dark));
   }
 
   .login-icon {
@@ -127,7 +151,19 @@ import Layout from '../../layouts/Layout.astro';
     gap: 1rem;
     justify-content: center;
     flex-wrap: wrap;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .btn-portal-access {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    border: none;
+    box-shadow: 0 4px 15px rgba(30, 60, 30, 0.25);
+    font-weight: 700;
+  }
+
+  .btn-portal-access:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(30, 60, 30, 0.35);
   }
 
   .login-features {
@@ -155,7 +191,12 @@ import Layout from '../../layouts/Layout.astro';
     font-weight: 500;
   }
 
-  /* Responsive */
+  .portal-note {
+    margin-top: 1.5rem;
+    color: var(--color-gray-500);
+    text-align: center;
+  }
+
   @media (max-width: 768px) {
     .client-portal-page {
       padding: 6rem 0 3rem;

@@ -1,19 +1,17 @@
 ---
 // Página Portal de Clientes - Exportadora Surberries
-// Placeholder para futuro módulo de autenticación
+// Acceso al generador de cotizaciones protegido
 import Layout from '../layouts/Layout.astro';
-
 ---
 
-<Layout title="Portal de Clientes" description="Accede a la información de tus pedidos, documentos y historial de compras." lang="es">
-
+<Layout title="Portal de Clientes" description="Accede al generador de cotizaciones y área restringida para clientes." lang="es">
   
   <main class="client-portal-page">
     <div class="container-custom">
       <div class="portal-content">
         <div class="portal-header">
           <h2>Portal de Clientes</h2>
-          <p>Accede a la información de tus pedidos, documentos y historial de compras.</p>
+          <p>Área restringida para generación de cotizaciones profesionales y gestión de documentos.</p>
         </div>
 
         <div class="portal-login-card">
@@ -24,35 +22,48 @@ import Layout from '../layouts/Layout.astro';
             </svg>
           </div>
 
-          <h3>Iniciar Sesión</h3>
+          <h3>🔐 Acceso Restringido</h3>
           <p class="login-description">
-            El portal de clientes estará disponible pronto. 
-            Si ya eres cliente, contáctanos para activar tu acceso.
+            Accede al generador de cotizaciones profesionales con los datos de Exportadora Sur Berries SpA.
+            Requiere contraseña proporcionada por nuestro equipo comercial.
           </p>
 
           <div class="login-actions">
-            <a href="/cotizar" class="btn btn-primary">
-              Solicitar Cotización
+            {/* BOTÓN PRINCIPAL - Portal de Cotizaciones */}
+            <a href="/portal" class="btn btn-primary btn-portal-access">
+              🔐 Acceso Restringido
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </a>
+            
+            {/* Botones secundarios */}
+            <a href="/cotizar" class="btn btn-outline">
+              Cotización Pública
             </a>
             <a href="mailto:contacto@exportsurberries.cl" class="btn btn-outline">
-              Contactar Soporte
+              Soporte
             </a>
           </div>
 
           <div class="login-features">
             <div class="feature-item">
-              <span class="feature-icon">📦</span>
-              <span>Estado de pedidos</span>
-            </div>
-            <div class="feature-item">
               <span class="feature-icon">📄</span>
-              <span>Documentos y certificados</span>
+              <span>Generar PDF profesional</span>
             </div>
             <div class="feature-item">
-              <span class="feature-icon">📊</span>
-              <span>Historial de compras</span>
+              <span class="feature-icon">💰</span>
+              <span>USD / CLP auto-calculado</span>
+            </div>
+            <div class="feature-item">
+              <span class="feature-icon">🔢</span>
+              <span>Correlativo automático</span>
             </div>
           </div>
+          
+          <p class="portal-note">
+            <small>⚠️ La contraseña es confidencial. Si no la tienes, contáctanos.</small>
+          </p>
         </div>
       </div>
     </div>
@@ -95,6 +106,19 @@ import Layout from '../layouts/Layout.astro';
     border-radius: var(--radius-xl);
     padding: 3rem 2.5rem;
     box-shadow: var(--shadow-xl);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Decoración sutil de "restringido" */
+  .portal-login-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-primary-dark));
   }
 
   .login-icon {
@@ -127,7 +151,20 @@ import Layout from '../layouts/Layout.astro';
     gap: 1rem;
     justify-content: center;
     flex-wrap: wrap;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
+  }
+
+  /* Botón de acceso restringido - Destacado */
+  .btn-portal-access {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    border: none;
+    box-shadow: 0 4px 15px rgba(30, 60, 30, 0.25);
+    font-weight: 700;
+  }
+
+  .btn-portal-access:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(30, 60, 30, 0.35);
   }
 
   .login-features {
@@ -153,6 +190,12 @@ import Layout from '../layouts/Layout.astro';
     font-size: 0.875rem;
     color: var(--color-gray-600);
     font-weight: 500;
+  }
+
+  .portal-note {
+    margin-top: 1.5rem;
+    color: var(--color-gray-500);
+    text-align: center;
   }
 
   /* Responsive */

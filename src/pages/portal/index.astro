@@ -1,0 +1,154 @@
+---
+// Portal de Clientes - Login
+import Layout from '../../layouts/Layout.astro';
+
+// 🔐 Password fija (el cliente debe manejarla con cuidado)
+const PORTAL_PASSWORD = "SurBerries2026!";
+---
+
+<Layout title="Portal de Clientes" description="Acceso restringido" lang="es">
+  
+  <main class="portal-login">
+    <div class="login-container">
+      <div class="login-header">
+        <img src="/images/logo-surberries.png" alt="Exportadora Sur Berries" class="login-logo" />
+        <h1>Portal de Clientes</h1>
+        <p>Acceso restringido para generación de cotizaciones</p>
+      </div>
+
+      <form id="portalLoginForm" class="login-form">
+        <div class="form-group">
+          <label for="password">Contraseña de acceso</label>
+          <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            placeholder="Ingresa la contraseña..."
+            required
+            class="form-input"
+          />
+        </div>
+        
+        <button type="submit" class="btn btn-primary btn-full">
+          Acceder al Portal
+        </button>
+        
+        <p class="login-hint">
+          <small>⚠️ La contraseña es confidencial. No la compartas.</small>
+        </p>
+      </form>
+
+      <div class="login-footer">
+        <a href="/" class="btn btn-outline">← Volver al Sitio</a>
+      </div>
+    </div>
+  </main>
+
+<script>
+  const PORTAL_PASSWORD = "SurBerries2026!";
+  
+  document.getElementById('portalLoginForm')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const input = document.getElementById('password').value;
+    
+    if (input === PORTAL_PASSWORD) {
+      sessionStorage.setItem('portalAuth', 'true');
+      sessionStorage.setItem('portalAuthTime', Date.now().toString());
+      window.location.href = '/portal/cotizaciones';
+    } else {
+      alert('❌ Contraseña incorrecta');
+    }
+  });
+</script>
+
+  <style>
+    .portal-login {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+      background: linear-gradient(135deg, var(--color-off-white) 0%, var(--color-gray-100) 100%);
+    }
+
+    .login-container {
+      max-width: 480px;
+      width: 100%;
+      background: var(--color-white);
+      padding: 3rem;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl);
+      text-align: center;
+    }
+
+    .login-header {
+      margin-bottom: 2.5rem;
+    }
+
+    .login-logo {
+      max-width: 180px;
+      height: auto;
+      margin-bottom: 1.5rem;
+    }
+
+    .login-header h1 {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+      color: var(--color-gray-900);
+    }
+
+    .login-header p {
+      color: var(--color-gray-600);
+      font-size: 1rem;
+    }
+
+    .login-form {
+      text-align: left;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--color-gray-900);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid var(--color-gray-200);
+      border-radius: var(--radius-md);
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+
+    .btn-full {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .login-hint {
+      text-align: center;
+      color: var(--color-gray-500);
+      margin: 1rem 0;
+    }
+
+    .login-footer {
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--color-gray-200);
+    }
+  </style>
+</Layout>

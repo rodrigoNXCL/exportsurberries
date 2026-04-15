@@ -1,0 +1,978 @@
+---
+// Portal - Generador de Cotizaciones PDF (CORREGIDO)
+// Sin header principal, JS funcional, cálculos activos
+
+// 🔐 Verificación server-side básica
+export const prerender = false;
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generador de Cotizaciones - Exportadora Sur Berries</title>
+  <style>
+    /* ===== RESET Y BASE ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f8f9fa;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    /* ===== HEADER DEL PORTAL (NO EL PRINCIPAL) ===== */
+    .portal-header {
+      background: linear-gradient(135deg, #1e3c2a 0%, #2d5a3d 100%);
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .portal-header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .portal-logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .portal-company {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .portal-header-right .btn-logout {
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.4);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.3s;
+    }
+
+    .portal-header-right .btn-logout:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    /* ===== CONTENEDOR PRINCIPAL ===== */
+    .quotation-container {
+      max-width: 1100px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .quotation-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: #1e3c2a;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid #e9ecef;
+    }
+
+    /* ===== FORMULARIOS ===== */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+      color: #495057;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #dee2e6;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #1e3c2a;
+    }
+
+    .form-textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    /* ===== TABLA DE PRODUCTOS ===== */
+    .table-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .btn-add {
+      background: #1e3c2a;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.25rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background 0.2s;
+    }
+
+    .btn-add:hover { background: #2d5a3d; }
+
+    .products-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+
+    .products-table th {
+      background: #f8f9fa;
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: #495057;
+      border-bottom: 2px solid #dee2e6;
+    }
+
+    .products-table td {
+      padding: 1rem;
+      border-bottom: 1px solid #e9ecef;
+      vertical-align: middle;
+    }
+
+    .products-table select,
+    .products-table input {
+      width: 100%;
+      padding: 0.6rem;
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+
+    .btn-remove {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .btn-remove:hover { background: #c82333; }
+
+    /* ===== TOTALES ===== */
+    .totals-section {
+      background: #f8f9fa;
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin-top: 1.5rem;
+    }
+
+    .totals-grid {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .currency-select {
+      min-width: 220px;
+    }
+
+    .currency-select label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .currency-select select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #dee2e6;
+      border-radius: 8px;
+      font-size: 1rem;
+      background: white;
+    }
+
+    .totals-box {
+      min-width: 280px;
+      background: white;
+      padding: 1.25rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      font-size: 1rem;
+    }
+
+    .total-row.iva {
+      color: #6c757d;
+    }
+
+    .total-row.grand-total {
+      border-top: 2px solid #dee2e6;
+      margin-top: 0.75rem;
+      padding-top: 1rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1e3c2a;
+    }
+
+    /* ===== BOTONES DE ACCIÓN ===== */
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid #e9ecef;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 0.85rem 2rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #1e3c2a 0%, #2d5a3d 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(30, 60, 42, 0.3);
+    }
+
+    .btn-outline {
+      background: white;
+      color: #1e3c2a;
+      border: 2px solid #1e3c2a;
+    }
+
+    .btn-outline:hover {
+      background: #f8f9fa;
+    }
+
+    .btn-lg {
+      padding: 1rem 2.5rem;
+      font-size: 1.1rem;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .portal-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+        padding: 1rem;
+      }
+
+      .quotation-container {
+        padding: 0 1rem;
+        margin: 1rem auto;
+      }
+
+      .quotation-card {
+        padding: 1.5rem;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .totals-grid {
+        flex-direction: column;
+      }
+
+      .totals-box,
+      .currency-select {
+        width: 100%;
+        min-width: auto;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .products-table {
+        font-size: 0.9rem;
+      }
+
+      .products-table th,
+      .products-table td {
+        padding: 0.75rem 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header del Portal (NO el principal del sitio) -->
+  <header class="portal-header">
+    <div class="portal-header-left">
+      <div class="portal-logo">🍓 SurBerries</div>
+      <div class="portal-company">
+        <strong>Exportadora Sur Berries SpA</strong><br>
+        RUT: 78.353.379-0
+      </div>
+    </div>
+    <div class="portal-header-right">
+      <button type="button" id="btnLogout" class="btn-logout">
+        🔐 Cerrar Sesión
+      </button>
+    </div>
+  </header>
+
+  <!-- Contenedor Principal -->
+  <main class="quotation-container">
+    
+    <!-- Sección 1: Datos del Cliente -->
+    <section class="quotation-card">
+      <h2 class="section-title">📋 Datos del Cliente</h2>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="clientCompany">Empresa / Razón Social *</label>
+          <input type="text" id="clientCompany" class="form-input" required placeholder="Nombre de la empresa" />
+        </div>
+        <div class="form-group">
+          <label for="clientRut">RUT / ID Fiscal</label>
+          <input type="text" id="clientRut" class="form-input" placeholder="Ej: 12.345.678-9" />
+        </div>
+        <div class="form-group">
+          <label for="clientName">Nombre de Contacto *</label>
+          <input type="text" id="clientName" class="form-input" required placeholder="Nombre completo" />
+        </div>
+        <div class="form-group">
+          <label for="clientEmail">Email *</label>
+          <input type="email" id="clientEmail" class="form-input" required placeholder="contacto@empresa.com" />
+        </div>
+        <div class="form-group">
+          <label for="clientPhone">Teléfono</label>
+          <input type="tel" id="clientPhone" class="form-input" placeholder="+56 9 XXXX XXXX" />
+        </div>
+        <div class="form-group">
+          <label for="clientCountry">País *</label>
+          <input type="text" id="clientCountry" class="form-input" required placeholder="Ej: Chile, USA, Alemania" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección 2: Productos -->
+    <section class="quotation-card">
+      <div class="table-header">
+        <h2 class="section-title">📦 Productos</h2>
+        <button type="button" id="btnAddProduct" class="btn-add">
+          ➕ Agregar Producto
+        </button>
+      </div>
+      
+      <div style="overflow-x: auto;">
+        <table class="products-table">
+          <thead>
+            <tr>
+              <th style="min-width: 200px;">Producto</th>
+              <th style="width: 100px;">Cantidad</th>
+              <th style="width: 80px;">Unidad</th>
+              <th style="width: 130px;">Valor Unitario</th>
+              <th style="width: 120px;">Subtotal</th>
+              <th style="width: 60px;"></th>
+            </tr>
+          </thead>
+          <tbody id="productsTableBody">
+            <!-- Las filas se agregan dinámicamente con JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Sección 3: Totales y Moneda -->
+    <section class="quotation-card totals-section">
+      <div class="totals-grid">
+        <div class="currency-select">
+          <label for="currency">Moneda de la cotización *</label>
+          <select id="currency" class="form-input">
+            <option value="USD">USD - Dólar Americano ($)</option>
+            <option value="CLP" selected>CLP - Peso Chileno ($)</option>
+          </select>
+        </div>
+        
+        <div class="totals-box">
+          <div class="total-row">
+            <span>Subtotal:</span>
+            <span id="subtotalValue">$0</span>
+          </div>
+          <div class="total-row iva">
+            <span>IVA (19%):</span>
+            <span id="ivaValue">$0</span>
+          </div>
+          <div class="total-row grand-total">
+            <span>TOTAL:</span>
+            <span id="grandTotalValue">$0</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección 4: Observaciones -->
+    <section class="quotation-card">
+      <h2 class="section-title">📝 Observaciones</h2>
+      <textarea 
+        id="observations" 
+        class="form-input form-textarea" 
+        placeholder="Ej: Precios FOB Valparaíso, validez 30 días, pago 50% anticipo, entrega en 15 días..."
+      ></textarea>
+      <p style="font-size: 0.85rem; color: #6c757d; margin-top: 0.5rem;">
+        💡 Aquí puedes especificar condiciones de pago, Incoterms (FOB/CIF), plazo de entrega, etc.
+      </p>
+    </section>
+
+    <!-- Botones de Acción -->
+    <div class="action-buttons">
+      <button type="button" id="btnGeneratePDF" class="btn btn-primary btn-lg">
+        📄 Generar PDF de Cotización
+      </button>
+      <button type="button" id="btnReset" class="btn btn-outline btn-lg">
+        🔄 Limpiar Formulario
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Scripts externos para PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+  <script>
+    // ============================================
+    // CONFIGURACIÓN
+    // ============================================
+    const PORTAL_PASSWORD = "SurBerries2026!";
+    
+    const companyData = {
+      name: "Exportadora Sur Berries SpA",
+      rut: "78.353.379-0",
+      address: "Isabel Riquelme #506, Chillán, Chile",
+      phone: "+56 9 5900 8508",
+      phone2: "+56 9 3436 5048",
+      email: "contacto@exportsurberries.com",
+      website: "exportsurberries.com"
+    };
+
+    const productsList = [
+      { id: "frutilla", name: "Frutilla IQF", unit: "kg" },
+      { id: "frambuesa", name: "Frambuesa IQF", unit: "kg" },
+      { id: "arandano", name: "Arándano IQF", unit: "kg" },
+      { id: "mora", name: "Mora IQF", unit: "kg" },
+      { id: "boletus", name: "Hongo Boletus IQF", unit: "kg" },
+      { id: "uva", name: "Uva IQF", unit: "kg" },
+      { id: "castana", name: "Castañas IQF", unit: "kg" },
+      { id: "kiwi", name: "Kiwi IQF", unit: "kg" }
+    ];
+
+    let productRowCounter = 0;
+
+    // ============================================
+    // INICIALIZACIÓN
+    // ============================================
+    document.addEventListener('DOMContentLoaded', () => {
+      // Verificar autenticación
+      checkAuth();
+      
+      // Agregar primera fila de producto
+      addProductRow();
+      
+      // Vincular eventos
+      bindEvents();
+    });
+
+    // ============================================
+    // AUTENTICACIÓN
+    // ============================================
+    function checkAuth() {
+      const auth = sessionStorage.getItem('portalAuth');
+      const authTime = sessionStorage.getItem('portalAuthTime');
+      const now = Date.now();
+      
+      // Session expira en 2 horas
+      if (!auth || !authTime || (now - parseInt(authTime)) > 2 * 60 * 60 * 1000) {
+        sessionStorage.clear();
+        window.location.href = '/portal';
+        return;
+      }
+    }
+
+    function bindEvents() {
+      // Logout
+      document.getElementById('btnLogout')?.addEventListener('click', logoutPortal);
+      
+      // Agregar producto
+      document.getElementById('btnAddProduct')?.addEventListener('click', addProductRow);
+      
+      // Generar PDF
+      document.getElementById('btnGeneratePDF')?.addEventListener('click', generatePDF);
+      
+      // Reset
+      document.getElementById('btnReset')?.addEventListener('click', resetForm);
+      
+      // Cambiar moneda → recalcular
+      document.getElementById('currency')?.addEventListener('change', updateTotals);
+    }
+
+    // ============================================
+    // LOGOUT
+    // ============================================
+    function logoutPortal() {
+      if (confirm('¿Cerrar sesión del portal?')) {
+        sessionStorage.clear();
+        window.location.href = '/portal';
+      }
+    }
+
+    // ============================================
+    // AGREGAR FILA DE PRODUCTO
+    // ============================================
+
+function addProductRow() {
+  productRowCounter++;
+  const rowId = productRowCounter;
+  const tbody = document.getElementById('productsTableBody');
+  
+  const row = document.createElement('tr');
+  row.dataset.rowId = rowId;
+  row.innerHTML = `
+    <td>
+      <select class="form-input product-select" id="productSelect${rowId}">
+        <option value="">Seleccionar...</option>
+        ${productsList.map(p => 
+          `<option value="${p.id}" data-unit="${p.unit}">${p.name}</option>`
+        ).join('')}
+      </select>
+    </td>
+    <td>
+      <input type="number" class="form-input qty-input" id="qtyInput${rowId}" 
+             min="0" step="0.01" placeholder="0.00" />
+    </td>
+    <td>
+      <span class="unit-display" id="unit${rowId}">-</span>
+    </td>
+    <td>
+      <input type="number" class="form-input price-input" id="priceInput${rowId}" 
+             min="0" step="0.01" placeholder="0.00" />
+    </td>
+    <td>
+      <strong class="subtotal-display" id="subtotal${rowId}">$0</strong>
+    </td>
+    <td>
+      <button type="button" class="btn-remove" onclick="removeProductRow(${rowId})">✕</button>
+    </td>
+  `;
+  
+  tbody.appendChild(row);
+  
+  // === VINCULAR EVENTOS INMEDIATAMENTE ===
+  setTimeout(() => {
+    const productSelect = document.getElementById(`productSelect${rowId}`);
+    const qtyInput = document.getElementById(`qtyInput${rowId}`);
+    const priceInput = document.getElementById(`priceInput${rowId}`);
+    
+    // Cambiar producto → actualizar unidad y calcular
+    if (productSelect) {
+      productSelect.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        const unit = selectedOption.dataset.unit || '-';
+        const unitDisplay = document.getElementById(`unit${rowId}`);
+        if (unitDisplay) unitDisplay.textContent = unit;
+        calculateRow(rowId);
+      });
+    }
+    
+    // Cambiar cantidad → calcular en tiempo real
+    if (qtyInput) {
+      qtyInput.addEventListener('input', function() {
+        console.log('📊 Cantidad cambiada:', this.value);
+        calculateRow(rowId);
+      });
+      
+      qtyInput.addEventListener('keyup', function() {
+        console.log('⌨️ Keyup en cantidad:', this.value);
+        calculateRow(rowId);
+      });
+    }
+    
+    // Cambiar precio → calcular en tiempo real
+    if (priceInput) {
+      priceInput.addEventListener('input', function() {
+        console.log('💰 Precio cambiado:', this.value);
+        calculateRow(rowId);
+      });
+      
+      priceInput.addEventListener('keyup', function() {
+        console.log('⌨️ Keyup en precio:', this.value);
+        calculateRow(rowId);
+      });
+    }
+  }, 100);
+}
+
+    // ============================================
+    // CÁLCULOS
+    // ============================================
+function calculateRow(rowId) {
+  console.log('🔢 Calculando fila:', rowId);
+  
+  const qtyInput = document.getElementById(`qtyInput${rowId}`);
+  const priceInput = document.getElementById(`priceInput${rowId}`);
+  const subtotalDisplay = document.getElementById(`subtotal${rowId}`);
+  
+  if (!qtyInput || !priceInput || !subtotalDisplay) {
+    console.error('❌ Elementos no encontrados para fila', rowId);
+    return;
+  }
+  
+  const qty = parseFloat(qtyInput.value) || 0;
+  const price = parseFloat(priceInput.value) || 0;
+  const subtotal = qty * price;
+  
+  console.log(`📊 Qty: ${qty} × Price: ${price} = Subtotal: ${subtotal}`);
+  
+  // Actualizar el subtotal de la fila
+  subtotalDisplay.textContent = formatCurrency(subtotal);
+  
+  // Actualizar totales generales
+  updateTotals();
+}
+
+    function formatCurrency(amount) {
+      const currency = document.getElementById('currency').value;
+      const locale = currency === 'CLP' ? 'es-CL' : 'en-US';
+      const minDecimals = currency === 'CLP' ? 0 : 2;
+      
+      return new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency: currency,
+        minimumFractionDigits: minDecimals,
+        maximumFractionDigits: minDecimals
+      }).format(amount);
+    }
+
+    function updateTotals() {
+  console.log('📈 Actualizando totales...');
+  
+  let subtotal = 0;
+  
+  document.querySelectorAll('#productsTableBody tr').forEach(row => {
+    const rowId = row.dataset.rowId;
+    const qtyInput = document.getElementById(`qtyInput${rowId}`);
+    const priceInput = document.getElementById(`priceInput${rowId}`);
+    
+    const qty = parseFloat(qtyInput?.value) || 0;
+    const price = parseFloat(priceInput?.value) || 0;
+    subtotal += qty * price;
+  });
+  
+  const iva = subtotal * 0.19;
+  const grandTotal = subtotal + iva;
+  
+  console.log(`💵 Subtotal: ${subtotal}, IVA: ${iva}, Total: ${grandTotal}`);
+  
+  const subtotalEl = document.getElementById('subtotalValue');
+  const ivaEl = document.getElementById('ivaValue');
+  const grandTotalEl = document.getElementById('grandTotalValue');
+  
+  if (subtotalEl) subtotalEl.textContent = formatCurrency(subtotal);
+  if (ivaEl) ivaEl.textContent = formatCurrency(iva);
+  if (grandTotalEl) grandTotalEl.textContent = formatCurrency(grandTotal);
+  
+  return { subtotal, iva, grandTotal };
+}
+
+function removeProductRow(rowId) {
+  console.log('🗑️ Eliminando fila:', rowId);
+  const row = document.querySelector(`tr[data-row-id="${rowId}"]`);
+  if (row) {
+    row.remove();
+    updateTotals();
+  }
+}
+
+    // ============================================
+    // GENERAR ID DE COTIZACIÓN
+    // ============================================
+    function generateQuoteId() {
+      const now = new Date();
+      const dateStr = now.toISOString().split('T')[0].replace(/-/g, '');
+      const random = Math.random().toString(36).substring(2, 6).toUpperCase();
+      return `COT-${dateStr}-${random}`;
+    }
+
+    // ============================================
+    // GENERAR PDF
+    // ============================================
+    async function generatePDF() {
+      // Validar campos requeridos
+      const clientCompany = document.getElementById('clientCompany').value.trim();
+      const clientName = document.getElementById('clientName').value.trim();
+      const clientEmail = document.getElementById('clientEmail').value.trim();
+      const clientCountry = document.getElementById('clientCountry').value.trim();
+      
+      if (!clientCompany || !clientName || !clientEmail || !clientCountry) {
+        alert('⚠️ Completa los campos obligatorios del cliente (*)');
+        return;
+      }
+      
+      // Validar productos
+      const rows = document.querySelectorAll('#productsTableBody tr');
+      if (rows.length === 0) {
+        alert('⚠️ Agrega al menos un producto');
+        return;
+      }
+      
+      // Generar datos
+      const quoteId = generateQuoteId();
+      const quoteDate = new Date().toLocaleDateString('es-CL', {
+        year: 'numeric', month: 'long', day: 'numeric'
+      });
+      const currency = document.getElementById('currency').value;
+      const currencySymbol = currency === 'CLP' ? '$' : 'USD $';
+      const { subtotal, iva, grandTotal } = updateTotals();
+      const observations = document.getElementById('observations').value.trim();
+      
+      // Inicializar jsPDF
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      
+      // === HEADER ===
+// === HEADER DEL PDF ===
+doc.setFillColor(255, 255, 255);
+doc.rect(0, 0, 210, 55, 'F');
+
+doc.setFontSize(16);
+doc.setFont('helvetica', 'bold');
+doc.setTextColor(30, 60, 30);
+doc.text('Exportadora Sur Berries SpA', 15, 15);
+
+doc.setFontSize(9);
+doc.setFont('helvetica', 'normal');
+doc.setTextColor(80, 80, 80);
+doc.text('RUT: 78.353.379-0', 15, 22);
+doc.text('Isabel Riquelme #506, Chillan, Chile', 15, 27);
+doc.text('Tel: +56 9 5900 8508 / +56 9 3436 5048', 15, 32);
+doc.text('Email: contacto@exportsurberries.cl', 15, 37);
+
+doc.setFontSize(18);
+doc.setFont('helvetica', 'bold');
+doc.text('COTIZACION', 130, 20);
+
+doc.setFontSize(10);
+doc.setFont('helvetica', 'normal');
+doc.text('Nro: ' + quoteId, 130, 28);
+doc.text('Fecha: ' + quoteDate, 130, 33);
+doc.text('Moneda: ' + currency, 130, 38);
+
+doc.setDrawColor(200, 200, 200);
+doc.line(15, 45, 195, 45);
+      
+      // === CLIENTE ===
+      let yPos = 58;
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(30, 60, 30);
+      doc.text('DATOS DEL CLIENTE', 15, yPos);
+      
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(60, 60, 60);
+      
+      yPos += 7;
+      doc.text(`Empresa: ${clientCompany}`, 15, yPos);
+      doc.text(`Contacto: ${clientName}`, 15, yPos + 5);
+      doc.text(`Email: ${clientEmail}`, 15, yPos + 10);
+      
+      const clientRut = document.getElementById('clientRut').value.trim();
+      const clientPhone = document.getElementById('clientPhone').value.trim();
+      if (clientRut) doc.text(`RUT/ID: ${clientRut}`, 110, yPos);
+      if (clientPhone) doc.text(`Tel: ${clientPhone}`, 110, yPos + 5);
+      doc.text(`Pais: ${clientCountry}`, 110, yPos + 10);
+      
+      yPos += 23;
+      
+      // === PRODUCTOS ===
+      const tableData = [];
+      document.querySelectorAll('#productsTableBody tr').forEach(row => {
+        const select = row.querySelector('.product-select');
+        const productName = select.options[select.selectedIndex]?.text || '-';
+        const qty = row.querySelector('.qty-input').value || '0';
+        const unit = row.querySelector('.unit-display').textContent;
+        const price = parseFloat(row.querySelector('.price-input').value) || 0;
+        const lineSubtotal = parseFloat(qty) * price;
+        
+        tableData.push([
+          productName,
+          `${qty} ${unit}`,
+          formatCurrency(price),
+          formatCurrency(lineSubtotal)
+        ]);
+      });
+      
+      doc.autoTable({
+        startY: yPos,
+        head: [['Producto', 'Cantidad', 'Precio Unit.', 'Subtotal']],
+        body: tableData,
+        theme: 'grid',
+        headStyles: { fillColor: [30, 60, 30], textColor: 255, fontSize: 8 },
+        styles: { fontSize: 8, cellPadding: 2.5 },
+        columnStyles: {
+          0: { cellWidth: 65 },
+          1: { cellWidth: 30, halign: 'center' },
+          2: { cellWidth: 35, halign: 'right' },
+          3: { cellWidth: 35, halign: 'right', fontStyle: 'bold' }
+        }
+      });
+      
+      yPos = doc.lastAutoTable.finalY + 12;
+      
+      // === TOTALES ===
+      doc.setFontSize(9);
+      doc.text('Subtotal:', 135, yPos);
+      doc.text(formatCurrency(subtotal), 190, yPos, { align: 'right' });
+      
+      yPos += 5;
+      doc.text('IVA (19%):', 135, yPos);
+      doc.text(formatCurrency(iva), 190, yPos, { align: 'right' });
+      
+      doc.setDrawColor(100, 100, 100);
+      doc.line(135, yPos + 2, 190, yPos + 2);
+      
+      yPos += 8;
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(30, 60, 30);
+      doc.text(`TOTAL ${currency}:`, 135, yPos);
+      doc.text(formatCurrency(grandTotal), 190, yPos, { align: 'right' });
+      
+      // === OBSERVACIONES ===
+      if (observations) {
+        yPos += 18;
+        doc.setFontSize(9);
+        doc.setFont('helvetica', 'bold');
+        doc.text('OBSERVACIONES:', 15, yPos);
+        
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(60, 60, 60);
+        
+// Reemplazar caracteres especiales
+  const cleanObs = observations
+    .replace(/ñ/g, 'n')
+    .replace(/Ñ/g, 'N')
+    .replace(/á/g, 'a')
+    .replace(/é/g, 'e')
+    .replace(/í/g, 'i')
+    .replace(/ó/g, 'o')
+    .replace(/ú/g, 'u')
+    .replace(/Á/g, 'A')
+    .replace(/É/g, 'E')
+    .replace(/Í/g, 'I')
+    .replace(/Ó/g, 'O')
+    .replace(/Ú/g, 'U');
+
+        const splitObs = doc.splitTextToSize(observations, 175);
+        doc.text(splitObs, 15, yPos + 5);
+      }
+      
+      // === FOOTER ===
+      const pageCount = doc.internal.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        doc.setFontSize(7);
+        doc.setTextColor(120, 120, 120);
+        doc.text(`Pagina ${i} de ${pageCount}`, 105, 290, { align: 'center' });
+        doc.text('Valida por 30 dias | Precios sujetos a cambio', 105, 295, { align: 'center' });
+      }
+      
+      // Guardar
+      const cleanName = clientCompany.replace(/[^a-z0-9]/gi, '_').substring(0, 25);
+      const fileName = `Cotizacion_${quoteId}_${cleanName}.pdf`;
+      doc.save(fileName);
+      
+      alert(`✅ Cotización generada\n\n📄 ${fileName}\n🔢 ${quoteId}\n💰 ${formatCurrency(grandTotal)}`);
+    }
+
+    // ============================================
+    // LIMPIAR FORMULARIO
+    // ============================================
+    function resetForm() {
+      if (confirm('¿Limpiar todo el formulario?')) {
+        document.querySelectorAll('.form-input').forEach(input => {
+          if (input.type !== 'hidden') input.value = '';
+        });
+        document.getElementById('productsTableBody').innerHTML = '';
+        document.getElementById('observations').value = '';
+        productRowCounter = 0;
+        addProductRow();
+        updateTotals();
+      }
+    }
+  
+  // Debug global
+window.debugPortal = function() {
+  console.log('🔍 Debug Portal de Cotizaciones');
+  console.log('Filas:', document.querySelectorAll('#productsTableBody tr').length);
+  console.log('Inputs cantidad:', document.querySelectorAll('.qty-input').length);
+  console.log('Inputs precio:', document.querySelectorAll('.price-input').length);
+};
+
+  </script>
+
+</body>
+</html>
