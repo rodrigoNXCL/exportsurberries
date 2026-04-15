@@ -522,6 +522,34 @@ export const prerender = false;
 
     let productRowCounter = 0;
 
+// ============================================
+// CARGAR LOGO COMO BASE64
+// ============================================
+let logoBase64 = null;
+
+async function loadLogo() {
+  try {
+    const response = await fetch('/images/logo-surberries.png');
+    const blob = await response.blob();
+    const reader = new FileReader();
+    
+    reader.onloadend = function() {
+      logoBase64 = reader.result;
+      console.log('✅ Logo cargado correctamente');
+    };
+    
+    reader.readAsDataURL(blob);
+  } catch (error) {
+    console.error('❌ Error cargando logo:', error);
+  }
+}
+
+// Cargar logo al iniciar
+document.addEventListener('DOMContentLoaded', () => {
+  loadLogo();
+  // ... el resto de tu código existente
+});
+
     // ============================================
     // INICIALIZACIÓN
     // ============================================
@@ -795,33 +823,47 @@ function removeProductRow(rowId) {
       // === HEADER ===
 // === HEADER DEL PDF ===
 doc.setFillColor(255, 255, 255);
-doc.rect(0, 0, 210, 55, 'F');
+doc.rect(0, 0, 210, 60, 'F');
 
-doc.setFontSize(16);
+// Agregar logo si está disponible (más alto, menos achatado)
+if (logoBase64) {
+  try {
+    // Logo: x, y, width, height ← Aumentamos height de 20 a 28
+    doc.addImage(logoBase64, 'PNG', 15, 10, 35, 28);
+  } catch (e) {
+    console.log('Logo no disponible, usando solo texto');
+  }
+}
+
+// Datos de la empresa (más a la derecha para no pisar logo)
+doc.setFontSize(14);
 doc.setFont('helvetica', 'bold');
 doc.setTextColor(30, 60, 30);
-doc.text('Exportadora Sur Berries SpA', 15, 15);
+doc.text('Exportadora Sur Berries SpA', 55, 18);
+
+doc.setFontSize(8);
+doc.setFont('helvetica', 'normal');
+doc.setTextColor(80, 80, 80);
+doc.text('RUT: 78.353.379-0', 55, 24);
+doc.text('Isabel Riquelme #506, Chillan, Chile', 55, 29);
+doc.text('Tel: +56 9 5900 8508 / +56 9 3436 5048', 55, 34);
+doc.text('Email: contacto@exportsurberries.cl', 55, 39);
+doc.text('Web: exportsurberries.cl', 55, 44);
+
+// Título COTIZACION (MÁS A LA DERECHA para no pisar SpA)
+doc.setFontSize(18);
+doc.setFont('helvetica', 'bold');
+doc.text('COTIZACION', 145, 20);  // ← Antes: 130, AHORA: 145
 
 doc.setFontSize(9);
 doc.setFont('helvetica', 'normal');
-doc.setTextColor(80, 80, 80);
-doc.text('RUT: 78.353.379-0', 15, 22);
-doc.text('Isabel Riquelme #506, Chillan, Chile', 15, 27);
-doc.text('Tel: +56 9 5900 8508 / +56 9 3436 5048', 15, 32);
-doc.text('Email: contacto@exportsurberries.cl', 15, 37);
+doc.text('Nro: ' + quoteId, 145, 28);   // ← Antes: 130, AHORA: 145
+doc.text('Fecha: ' + quoteDate, 145, 33);  // ← Antes: 130, AHORA: 145
+doc.text('Moneda: ' + currency, 145, 38);  // ← Antes: 130, AHORA: 145
 
-doc.setFontSize(18);
-doc.setFont('helvetica', 'bold');
-doc.text('COTIZACION', 130, 20);
-
-doc.setFontSize(10);
-doc.setFont('helvetica', 'normal');
-doc.text('Nro: ' + quoteId, 130, 28);
-doc.text('Fecha: ' + quoteDate, 130, 33);
-doc.text('Moneda: ' + currency, 130, 38);
-
+// Línea separadora (MÁS ARRIBA para no pisar DATOS DEL CLIENTE)
 doc.setDrawColor(200, 200, 200);
-doc.line(15, 45, 195, 45);
+doc.line(15, 50, 195, 50);  // ← Antes: 55, AHORA: 50
       
       // === CLIENTE ===
       let yPos = 58;
