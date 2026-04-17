@@ -19,38 +19,7 @@ import Layout from '../layouts/Layout.astro';
 
       {/* Grid de productos */}
       <div class="products-grid">
-        {/* Producto 1: Frutillas */}
-        <article class="product-card" data-producto="frutilla">
-          <div class="product-image-wrapper">
-            <img 
-              src="/images/products/frutilla-iqf.webp" 
-              alt="Frutillas IQF Congeladas - Exportadora Surberries"
-              width="800"
-              height="800"
-              loading="lazy"
-              class="product-image"
-            />
-            <span class="season-badge available">Disponible</span>
-          </div>
-          
-          <div class="product-info">
-            <h3>Frutillas IQF</h3>
-            <p class="product-subtitle">Premium Grade A</p>
-            
-            <ul class="product-specs">
-              <li>✓ IQF (Congelado Individual)</li>
-              <li>✓ Cajas 30lbs / 13.61</li>
-              <li>✓ Brix: 8-10°</li>
-              <li>✓ Temporada: Nov - Mar</li>
-            </ul>
-            
-            <a href="/cotizar?producto=frutilla-iqf" class="btn btn-primary btn-cotizar">
-              Cotizar Frutillas
-            </a>
-          </div>
-        </article>
-
-        {/* Producto 2: Arándanos */}
+{/* Producto 2: Arándanos */}
         <article class="product-card" data-producto="arandano">
           <div class="product-image-wrapper">
             <img 
@@ -112,6 +81,69 @@ import Layout from '../layouts/Layout.astro';
           </div>
         </article>
 
+{/* Producto 6: Mora */}
+<article class="product-card" data-producto="mora">
+  <div class="product-image-wrapper">
+    <img 
+      src="/images/products/mora-iqf.webp" 
+      alt="Mora IQF Congelada - Exportadora Surberries"
+      width="800"
+      height="800"
+      loading="lazy"
+      class="product-image"
+    />
+    <span class="season-badge available">Disponible</span>
+  </div>
+  
+  <div class="product-info">
+    <h3>Mora IQF</h3>
+    <p class="product-subtitle">Premium</p>
+    
+    <ul class="product-specs">
+      <li>✓ IQF (Congelado Individual)</li>
+              <li>✓ Cajas 30lbs / 13.61</li>
+              <li>✓ Grado Premium</li>
+              <li>✓ Temporada: Dic - Mar</li>
+    </ul>
+    
+    <a href="/cotizar?producto=mora-iqf" class="btn btn-primary btn-cotizar">
+      Cotizar Mora
+    </a>
+  </div>
+</article>
+
+
+        {/* Producto 1: Frutillas */}
+        <article class="product-card" data-producto="frutilla">
+          <div class="product-image-wrapper">
+            <img 
+              src="/images/products/frutilla-iqf.webp" 
+              alt="Frutillas IQF Congeladas - Exportadora Surberries"
+              width="800"
+              height="800"
+              loading="lazy"
+              class="product-image"
+            />
+            <span class="season-badge available">Disponible</span>
+          </div>
+          
+          <div class="product-info">
+            <h3>Frutillas IQF</h3>
+            <p class="product-subtitle">Premium Grade A</p>
+            
+            <ul class="product-specs">
+              <li>✓ IQF (Congelado Individual)</li>
+              <li>✓ Cajas 30lbs / 13.61</li>
+              <li>✓ Brix: 8-10°</li>
+              <li>✓ Temporada: Nov - Mar</li>
+            </ul>
+            
+            <a href="/cotizar?producto=frutilla-iqf" class="btn btn-primary btn-cotizar">
+              Cotizar Frutillas
+            </a>
+          </div>
+        </article>
+     
         {/* Producto 4: Espárragos */}
         <article class="product-card" data-producto="esparrago">
           <div class="product-image-wrapper">
@@ -172,37 +204,6 @@ import Layout from '../layouts/Layout.astro';
             </a>
           </div>
         </article>
-
-{/* Producto 6: Mora */}
-<article class="product-card" data-producto="mora">
-  <div class="product-image-wrapper">
-    <img 
-      src="/images/products/mora-iqf.webp" 
-      alt="Mora IQF Congelada - Exportadora Surberries"
-      width="800"
-      height="800"
-      loading="lazy"
-      class="product-image"
-    />
-    <span class="season-badge available">Disponible</span>
-  </div>
-  
-  <div class="product-info">
-    <h3>Mora IQF</h3>
-    <p class="product-subtitle">Premium</p>
-    
-    <ul class="product-specs">
-      <li>✓ IQF (Congelado Individual)</li>
-              <li>✓ Cajas 30lbs / 13.61</li>
-              <li>✓ Grado Premium</li>
-              <li>✓ Temporada: Dic - Mar</li>
-    </ul>
-    
-    <a href="/cotizar?producto=mora-iqf" class="btn btn-primary btn-cotizar">
-      Cotizar Mora
-    </a>
-  </div>
-</article>
 
 {/* Producto 7: Hongo Boletus */}
 <article class="product-card" data-producto="boletus">

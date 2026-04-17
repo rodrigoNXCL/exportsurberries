@@ -16,38 +16,7 @@ import Layout from '../../layouts/Layout.astro';
 
       {/* Products Grid */}
       <div class="products-grid">
-        {/* Product 1: Strawberries */}
-        <article class="product-card" data-producto="frutilla">
-          <div class="product-image-wrapper">
-            <img 
-              src="/images/products/frutilla-iqf.webp" 
-              alt="IQF Frozen Strawberries - Exportadora Surberries"
-              width="800"
-              height="800"
-              loading="lazy"
-              class="product-image"
-            />
-            <span class="season-badge available">Available</span>
-          </div>
-          
-          <div class="product-info">
-            <h3>IQF Strawberries</h3>
-            <p class="product-subtitle">Premium Grade A</p>
-            
-            <ul class="product-specs">
-              <li>✓ IQF (Individually Quick Frozen)</li>
-              <li>✓ Boxes 10kg / 5kg</li>
-              <li>✓ Brix: 8-10°</li>
-              <li>✓ Season: Nov - Mar</li>
-            </ul>
-            
-            <a href="/en/cotizar?producto=frutilla-iqf" class="btn btn-primary btn-cotizar">
-              Quote Strawberries
-            </a>
-          </div>
-        </article>
-
-        {/* Product 2: Blueberries */}
+      {/* Product 2: Blueberries */}
         <article class="product-card" data-producto="arandano">
           <div class="product-image-wrapper">
             <img 
@@ -76,8 +45,8 @@ import Layout from '../../layouts/Layout.astro';
               Quote Blueberries
             </a>
           </div>
-        </article>
-
+        </article>  
+        
         {/* Product 3: Raspberries */}
         <article class="product-card" data-producto="frambuesa">
           <div class="product-image-wrapper">
@@ -109,7 +78,69 @@ import Layout from '../../layouts/Layout.astro';
           </div>
         </article>
 
-        {/* Product 4: Asparagus */}
+        {/* Product 6: Blackberry */}
+<article class="product-card" data-producto="mora">
+  <div class="product-image-wrapper">
+    <img 
+      src="/images/products/mora-iqf.webp" 
+      alt="Frozen IQF Blackberry - Surberries Exporter"
+      width="800"
+      height="800"
+      loading="lazy"
+      class="product-image"
+    />
+    <span class="season-badge available">Available</span>
+  </div>
+  
+  <div class="product-info">
+    <h3>Blackberry IQF</h3>
+    <p class="product-subtitle">Premium Grade</p>
+    
+    <ul class="product-specs">
+      <li>✓ IQF (Individually Quick Frozen)</li>
+      <li>✓ Cases 30lbs / 13.61</li>
+      <li>✓ Premium Grade</li>
+      <li>✓ Season: Dec - Mar</li>
+    </ul>
+    
+    <a href="/en/cotizar?producto=mora-iqf" class="btn btn-primary btn-cotizar">
+      Request Quote
+    </a>
+  </div>
+</article>
+
+        {/* Product 1: Strawberries */}
+        <article class="product-card" data-producto="frutilla">
+          <div class="product-image-wrapper">
+            <img 
+              src="/images/products/frutilla-iqf.webp" 
+              alt="IQF Frozen Strawberries - Exportadora Surberries"
+              width="800"
+              height="800"
+              loading="lazy"
+              class="product-image"
+            />
+            <span class="season-badge available">Available</span>
+          </div>
+          
+          <div class="product-info">
+            <h3>IQF Strawberries</h3>
+            <p class="product-subtitle">Premium Grade A</p>
+            
+            <ul class="product-specs">
+              <li>✓ IQF (Individually Quick Frozen)</li>
+              <li>✓ Boxes 10kg / 5kg</li>
+              <li>✓ Brix: 8-10°</li>
+              <li>✓ Season: Nov - Mar</li>
+            </ul>
+            
+            <a href="/en/cotizar?producto=frutilla-iqf" class="btn btn-primary btn-cotizar">
+              Quote Strawberries
+            </a>
+          </div>
+        </article>
+
+      {/* Product 4: Asparagus */}
         <article class="product-card" data-producto="esparrago">
           <div class="product-image-wrapper">
             <img 
@@ -169,37 +200,6 @@ import Layout from '../../layouts/Layout.astro';
             </a>
           </div>
         </article>
-
-{/* Product 6: Blackberry */}
-<article class="product-card" data-producto="mora">
-  <div class="product-image-wrapper">
-    <img 
-      src="/images/products/mora-iqf.webp" 
-      alt="Frozen IQF Blackberry - Surberries Exporter"
-      width="800"
-      height="800"
-      loading="lazy"
-      class="product-image"
-    />
-    <span class="season-badge available">Available</span>
-  </div>
-  
-  <div class="product-info">
-    <h3>Blackberry IQF</h3>
-    <p class="product-subtitle">Premium Grade</p>
-    
-    <ul class="product-specs">
-      <li>✓ IQF (Individually Quick Frozen)</li>
-      <li>✓ Cases 30lbs / 13.61</li>
-      <li>✓ Premium Grade</li>
-      <li>✓ Season: Dec - Mar</li>
-    </ul>
-    
-    <a href="/en/cotizar?producto=mora-iqf" class="btn btn-primary btn-cotizar">
-      Request Quote
-    </a>
-  </div>
-</article>
 
 {/* Product 7: Boletus Mushroom */}
 <article class="product-card" data-producto="boletus">
