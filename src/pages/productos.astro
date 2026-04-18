@@ -2,24 +2,23 @@
 // Página Productos - Exportadora Surberries
 // Catálogo de productos congelados IQF
 import Layout from '../layouts/Layout.astro';
-
 ---
 
 <Layout title="Productos" description="Frutillas, arándanos, frambuesas y espárragos congelados IQF de la más alta calidad. Exportación desde Chile." lang="es">
   
-  
-  
   <main class="productos-page">
     <div class="container-custom">
+      
       {/* Header de la página */}
       <div class="page-header">
         <h1>Nuestros Productos</h1>
-        <p>Frutas y verduras congeladas IQF (Individual Quick Frozen) de la más alta calidad, cultivadas en el valle central de Chile.</p>
+        <p>Frutas y vegetales congeladas IQF (Individual Quick Frozen) de la más alta calidad, cultivadas en el valle central de Chile.</p>
       </div>
-
+      
       {/* Grid de productos */}
       <div class="products-grid">
-{/* Producto 2: Arándanos */}
+        
+        {/* Producto 1: Arándanos */}
         <article class="product-card" data-producto="arandano">
           <div class="product-image-wrapper">
             <img 
@@ -35,22 +34,27 @@ import Layout from '../layouts/Layout.astro';
           
           <div class="product-info">
             <h3>Arándanos IQF</h3>
-            <p class="product-subtitle">Calibre 14-18mm</p>
+            <p class="product-subtitle">Calibre 10 Up</p>
             
             <ul class="product-specs">
               <li>✓ IQF (Congelado Individual)</li>
               <li>✓ Cajas 30lbs / 13.61</li>
               <li>✓ Variedades: Legacy, O'Neal, Brigitta, Ochlockonee</li>
-              <li>✓ Temporada: Oct - Feb</li>
+              <li>✓ Temporada: Nov - Abr</li>
             </ul>
             
-            <a href="/cotizar?producto=arandano-iqf" class="btn btn-primary btn-cotizar">
-              Cotizar Arándanos
-            </a>
+            <div class="product-buttons">
+              <a href="/cotizar?producto=arandano-iqf" class="btn btn-primary btn-cotizar">
+                Cotizar Arándanos
+              </a>
+              <a href="/fichas/arandano-iqf.pdf" target="_blank" class="btn btn-outline btn-ficha">
+                📄 Ficha Técnica
+              </a>
+            </div>
           </div>
         </article>
-
-        {/* Producto 3: Frambuesas */}
+        
+        {/* Producto 2: Frambuesas */}
         <article class="product-card" data-producto="frambuesa">
           <div class="product-image-wrapper">
             <img 
@@ -71,49 +75,94 @@ import Layout from '../layouts/Layout.astro';
             <ul class="product-specs">
               <li>✓ IQF (Congelado Individual)</li>
               <li>✓ Cajas 10kg / 2.5kg</li>
-              <li>✓ Grado Premium</li>
+              <li>✓ Alta Calidad</li>
               <li>✓ Temporada: Dic - Mar</li>
             </ul>
             
-            <a href="/cotizar?producto=frambuesa-iqf" class="btn btn-primary btn-cotizar">
-              Cotizar Frambuesas
-            </a>
+            <div class="product-buttons">
+              <a href="/cotizar?producto=frambuesa-iqf" class="btn btn-primary btn-cotizar">
+                Cotizar Frambuesas
+              </a>
+              <a href="/fichas/frambuesa-iqf.pdf" target="_blank" class="btn btn-outline btn-ficha">
+                📄 Ficha Técnica
+              </a>
+            </div>
           </div>
         </article>
-
-{/* Producto 6: Mora */}
-<article class="product-card" data-producto="mora">
-  <div class="product-image-wrapper">
-    <img 
-      src="/images/products/mora-iqf.webp" 
-      alt="Mora IQF Congelada - Exportadora Surberries"
-      width="800"
-      height="800"
-      loading="lazy"
-      class="product-image"
-    />
-    <span class="season-badge available">Disponible</span>
-  </div>
-  
-  <div class="product-info">
-    <h3>Mora IQF</h3>
-    <p class="product-subtitle">Premium</p>
-    
-    <ul class="product-specs">
-      <li>✓ IQF (Congelado Individual)</li>
+        
+        {/* Producto 3: Mora */}
+        <article class="product-card" data-producto="mora">
+          <div class="product-image-wrapper">
+            <img 
+              src="/images/products/mora-iqf.webp" 
+              alt="Mora IQF Congelada - Exportadora Surberries"
+              width="800"
+              height="800"
+              loading="lazy"
+              class="product-image"
+            />
+            <span class="season-badge available">Disponible</span>
+          </div>
+          
+          <div class="product-info">
+            <h3>Mora IQF</h3>
+            <p class="product-subtitle">Alta Calidad</p>
+            
+            <ul class="product-specs">
+              <li>✓ IQF (Congelado Individual)</li>
               <li>✓ Cajas 30lbs / 13.61</li>
-              <li>✓ Grado Premium</li>
+              <li>✓ Alta Calidad</li>
               <li>✓ Temporada: Dic - Mar</li>
-    </ul>
-    
-    <a href="/cotizar?producto=mora-iqf" class="btn btn-primary btn-cotizar">
-      Cotizar Mora
-    </a>
-  </div>
-</article>
-
-
-        {/* Producto 1: Frutillas */}
+            </ul>
+            
+            <div class="product-buttons">
+              <a href="/cotizar?producto=mora-iqf" class="btn btn-primary btn-cotizar">
+                Cotizar Mora
+              </a>
+              <a href="/fichas/mora-iqf.pdf" target="_blank" class="btn btn-outline btn-ficha">
+                📄 Ficha Técnica
+              </a>
+            </div>
+          </div>
+        </article>
+        
+        {/* Producto 4: Cereza */}
+        <article class="product-card" data-producto="cereza">
+          <div class="product-image-wrapper">
+            <img 
+              src="/images/products/cereza-iqf.webp" 
+              alt="Cereza IQF Congelada - Exportadora Surberries"
+              width="800"
+              height="800"
+              loading="lazy"
+              class="product-image"
+            />
+            <span class="season-badge available">Disponible</span>
+          </div>
+          
+          <div class="product-info">
+            <h3>Cereza IQF</h3>
+            <p class="product-subtitle">Alta Calidad / Sin Carozo</p>
+            
+            <ul class="product-specs">
+              <li>✓ IQF (Congelado Individual)</li>
+              <li>✓ Cajas 10kg</li>
+              <li>✓ Variedades: Bing / Lapins</li>
+              <li>✓ Temporada: Dic - Feb</li>
+            </ul>
+            
+            <div class="product-buttons">
+              <a href="/cotizar?producto=cereza-iqf" class="btn btn-primary btn-cotizar">
+                Cotizar Cereza
+              </a>
+              <a href="/fichas/cereza-iqf.pdf" target="_blank" class="btn btn-outline btn-ficha">
+                📄 Ficha Técnica
+              </a>
+            </div>
+          </div>
+        </article>
+        
+        {/* Producto 5: Frutillas */}
         <article class="product-card" data-producto="frutilla">
           <div class="product-image-wrapper">
             <img 
@@ -129,7 +178,7 @@ import Layout from '../layouts/Layout.astro';
           
           <div class="product-info">
             <h3>Frutillas IQF</h3>
-            <p class="product-subtitle">Premium Grade A</p>
+            <p class="product-subtitle">Alta Calidad</p>
             
             <ul class="product-specs">
               <li>✓ IQF (Congelado Individual)</li>
@@ -138,13 +187,18 @@ import Layout from '../layouts/Layout.astro';
               <li>✓ Temporada: Nov - Mar</li>
             </ul>
             
-            <a href="/cotizar?producto=frutilla-iqf" class="btn btn-primary btn-cotizar">
-              Cotizar Frutillas
-            </a>
+            <div class="product-buttons">
+              <a href="/cotizar?producto=frutilla-iqf" class="btn btn-primary btn-cotizar">
+                Cotizar Frutillas
+              </a>
+              <a href="/fichas/frutilla-iqf.pdf" target="_blank" class="btn btn-outline btn-ficha">
+                📄 Ficha Técnica
+              </a>
+            </div>
           </div>
         </article>
-     
-        {/* Producto 4: Espárragos */}
+        
+        {/* Producto 6: Espárragos */}
         <article class="product-card" data-producto="esparrago">
           <div class="product-image-wrapper">
             <img 
@@ -169,13 +223,18 @@ import Layout from '../layouts/Layout.astro';
               <li>✓ Temporada: Oct - Dic</li>
             </ul>
             
-            <a href="/cotizar?producto=esparrago-iqf" class="btn btn-primary btn-cotizar">
-              Cotizar Espárragos
-            </a>
+            <div class="product-buttons">
+              <a href="/cotizar?producto=esparrago-iqf" class="btn btn-primary btn-cotizar">
+                Cotizar Espárragos
+              </a>
+              <a href="/fichas/esparrago-iqf.pdf" target="_blank" class="btn btn-outline btn-ficha">
+                📄 Ficha Técnica
+              </a>
+            </div>
           </div>
         </article>
-
-        {/* Producto 5: Otros Productos */}
+        
+        {/* Producto 7: Otros Productos */}
         <article class="product-card product-card-others" data-producto="otros">
           <div class="product-image-wrapper">
             <img 
@@ -204,133 +263,153 @@ import Layout from '../layouts/Layout.astro';
             </a>
           </div>
         </article>
-
-{/* Producto 7: Hongo Boletus */}
-<article class="product-card" data-producto="boletus">
-  <div class="product-image-wrapper">
-    <img 
-      src="/images/products/boletus-iqf.webp" 
-      alt="Hongo Boletus IQF Congelado - Exportadora Surberries"
-      width="800"
-      height="800"
-      loading="lazy"
-      class="product-image"
-    />
-    <span class="season-badge available">Disponible</span>
-  </div>
-  
-  <div class="product-info">
-    <h3>Hongo Boletus IQF</h3>
-    <p class="product-subtitle">Silvestre Premium</p>
-    
-    <ul class="product-specs">
-      <li>✓ IQF (Congelado Individual)</li>
-      <li>✓ Cajas 10kg</li>
-      <li>✓ Grado: A / B</li>
-      <li>✓ Temporada: Mar - Jun</li>
-    </ul>
-    
-    <a href="/cotizar?producto=boletus-iqf" class="btn btn-primary btn-cotizar">
-      Cotizar Boletus
-    </a>
-  </div>
-</article>
-
-{/* Producto 8: Uva IQF */}
-<article class="product-card" data-producto="uva">
-  <div class="product-image-wrapper">
-    <img 
-      src="/images/products/uva-iqf.webp" 
-      alt="Uva IQF Congelada - Exportadora Surberries"
-      width="800"
-      height="800"
-      loading="lazy"
-      class="product-image"
-    />
-    <span class="season-badge available">Disponible</span>
-  </div>
-  
-  <div class="product-info">
-    <h3>Uva IQF</h3>
-    <p class="product-subtitle">Sin Semillas / Con Semillas</p>
-    
-    <ul class="product-specs">
-      <li>✓ IQF (Congelado Individual)</li>
-      <li>✓ Cajas 10kg </li>
-      <li>✓ Variedades: Red / Green / Black</li>
-      <li>✓ Temporada: Ene - May</li>
-    </ul>
-    
-    <a href="/cotizar?producto=uva-iqf" class="btn btn-primary btn-cotizar">
-      Cotizar Uva
-    </a>
-  </div>
-</article>
-
-{/* Producto 9: Castañas IQF */}
-<article class="product-card" data-producto="castana">
-  <div class="product-image-wrapper">
-    <img 
-      src="/images/products/castana-iqf.webp" 
-      alt="Castañas IQF Congeladas - Exportadora Surberries"
-      width="800"
-      height="800"
-      loading="lazy"
-      class="product-image"
-    />
-    <span class="season-badge available">Disponible</span>
-  </div>
-  
-  <div class="product-info">
-    <h3>Castañas IQF</h3>
-    <p class="product-subtitle">Peladas / Enteras</p>
-    
-    <ul class="product-specs">
-      <li>✓ IQF (Congelado Individual)</li>
-      <li>✓ Cajas 10kg / También formato Malla</li>
-      <li>✓ Grado: A / B</li>
-      <li>✓ Temporada: Abr - Jul</li>
-    </ul>
-    
-    <a href="/cotizar?producto=castana-iqf" class="btn btn-primary btn-cotizar">
-      Cotizar Castañas
-    </a>
-  </div>
-</article>
-
-{/* Producto 10: Kiwi IQF */}
-<article class="product-card" data-producto="kiwi">
-  <div class="product-image-wrapper">
-    <img 
-      src="/images/products/kiwi-iqf.webp" 
-      alt="Kiwi IQF Congelado - Exportadora Surberries"
-      width="800"
-      height="800"
-      loading="lazy"
-      class="product-image"
-    />
-    <span class="season-badge available">Disponible</span>
-  </div>
-  
-  <div class="product-info">
-    <h3>Kiwi IQF</h3>
-    <p class="product-subtitle">Verde / Dorado</p>
-    
-    <ul class="product-specs">
-      <li>✓ IQF (Congelado Individual)</li>
-      <li>✓ Cajas 10kg</li>
-      <li>✓ Corte: Rodajas / Cubos</li>
-      <li>✓ Temporada: May - Ago</li>
-    </ul>
-    
-    <a href="/cotizar?producto=kiwi-iqf" class="btn btn-primary btn-cotizar">
-      Cotizar Kiwi
-    </a>
-  </div>
-</article>
-
+        
+        {/* Producto 8: Hongo Boletus */}
+        <article class="product-card" data-producto="boletus">
+          <div class="product-image-wrapper">
+            <img 
+              src="/images/products/boletus-iqf.webp" 
+              alt="Hongo Boletus IQF Congelado - Exportadora Surberries"
+              width="800"
+              height="800"
+              loading="lazy"
+              class="product-image"
+            />
+            <span class="season-badge available">Disponible</span>
+          </div>
+          
+          <div class="product-info">
+            <h3>Hongo Boletus IQF</h3>
+            <p class="product-subtitle">Silvestre</p>
+            
+            <ul class="product-specs">
+              <li>✓ IQF (Congelado Individual)</li>
+              <li>✓ Cajas 10kg</li>
+              <li>✓ Grado: A / B</li>
+              <li>✓ Temporada: Mar - Jun</li>
+            </ul>
+            
+            <div class="product-buttons">
+              <a href="/cotizar?producto=boletus-iqf" class="btn btn-primary btn-cotizar">
+                Cotizar Boletus
+              </a>
+              <a href="/fichas/boletus-iqf.pdf" target="_blank" class="btn btn-outline btn-ficha">
+                📄 Ficha Técnica
+              </a>
+            </div>
+          </div>
+        </article>
+        
+        {/* Producto 9: Uva IQF */}
+        <article class="product-card" data-producto="uva">
+          <div class="product-image-wrapper">
+            <img 
+              src="/images/products/uva-iqf.webp" 
+              alt="Uva IQF Congelada - Exportadora Surberries"
+              width="800"
+              height="800"
+              loading="lazy"
+              class="product-image"
+            />
+            <span class="season-badge available">Disponible</span>
+          </div>
+          
+          <div class="product-info">
+            <h3>Uva IQF</h3>
+            <p class="product-subtitle">Sin Semillas / Con Semillas</p>
+            
+            <ul class="product-specs">
+              <li>✓ IQF (Congelado Individual)</li>
+              <li>✓ Cajas 10kg</li>
+              <li>✓ Variedades: Red / Green / Black</li>
+              <li>✓ Temporada: Ene - May</li>
+            </ul>
+            
+            <div class="product-buttons">
+              <a href="/cotizar?producto=uva-iqf" class="btn btn-primary btn-cotizar">
+                Cotizar Uva
+              </a>
+              <a href="/fichas/uva-iqf.pdf" target="_blank" class="btn btn-outline btn-ficha">
+                📄 Ficha Técnica
+              </a>
+            </div>
+          </div>
+        </article>
+        
+        {/* Producto 10: Castañas IQF */}
+        <article class="product-card" data-producto="castana">
+          <div class="product-image-wrapper">
+            <img 
+              src="/images/products/castana-iqf.webp" 
+              alt="Castañas IQF Congeladas - Exportadora Surberries"
+              width="800"
+              height="800"
+              loading="lazy"
+              class="product-image"
+            />
+            <span class="season-badge available">Disponible</span>
+          </div>
+          
+          <div class="product-info">
+            <h3>Castañas IQF</h3>
+            <p class="product-subtitle">Peladas / Enteras</p>
+            
+            <ul class="product-specs">
+              <li>✓ IQF (Congelado Individual)</li>
+              <li>✓ Cajas 10kg / También formato Malla</li>
+              <li>✓ Grado: A / B</li>
+              <li>✓ Temporada: Abr - Jul</li>
+            </ul>
+            
+            <div class="product-buttons">
+              <a href="/cotizar?producto=castana-iqf" class="btn btn-primary btn-cotizar">
+                Cotizar Castañas
+              </a>
+              <a href="/fichas/castana-iqf.pdf" target="_blank" class="btn btn-outline btn-ficha">
+                📄 Ficha Técnica
+              </a>
+            </div>
+          </div>
+        </article>
+        
+        {/* Producto 11: Kiwi IQF */}
+        <article class="product-card" data-producto="kiwi">
+          <div class="product-image-wrapper">
+            <img 
+              src="/images/products/kiwi-iqf.webp" 
+              alt="Kiwi IQF Congelado - Exportadora Surberries"
+              width="800"
+              height="800"
+              loading="lazy"
+              class="product-image"
+            />
+            <span class="season-badge available">Disponible</span>
+          </div>
+          
+          <div class="product-info">
+            <h3>Kiwi IQF</h3>
+            <p class="product-subtitle">Verde / Dorado</p>
+            
+            <ul class="product-specs">
+              <li>✓ IQF (Congelado Individual)</li>
+              <li>✓ Cajas 10kg</li>
+              <li>✓ Corte: Rodajas / Cubos</li>
+              <li>✓ Temporada: May - Ago</li>
+            </ul>
+            
+            <div class="product-buttons">
+              <a href="/cotizar?producto=kiwi-iqf" class="btn btn-primary btn-cotizar">
+                Cotizar Kiwi
+              </a>
+              <a href="/fichas/kiwi-iqf.pdf" target="_blank" class="btn btn-outline btn-ficha">
+                📄 Ficha Técnica
+              </a>
+            </div>
+          </div>
+        </article>
+        
       </div>
-
+      
       {/* CTA Final */}
       <div class="productos-cta">
         <h2>¿Necesitas una cotización personalizada?</h2>
@@ -344,40 +423,41 @@ import Layout from '../layouts/Layout.astro';
           </a>
         </div>
       </div>
+      
     </div>
   </main>
-
+  
   <style>
     .productos-page {
       padding: 10rem 0 4rem;
       background: var(--color-off-white);
       min-height: 100vh;
     }
-
+    
     .page-header {
       text-align: center;
       max-width: 800px;
       margin: 0 auto 4rem;
     }
-
+    
     .page-header h1 {
       font-size: 2.5rem;
       margin-bottom: 1rem;
       color: var(--color-gray-900);
     }
-
+    
     .page-header p {
       font-size: 1.125rem;
       color: var(--color-gray-600);
     }
-
+    
     .products-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 2rem;
       margin-bottom: 4rem;
     }
-
+    
     .product-card {
       background: var(--color-white);
       border-radius: var(--radius-xl);
@@ -387,31 +467,31 @@ import Layout from '../layouts/Layout.astro';
       display: flex;
       flex-direction: column;
     }
-
+    
     .product-card:hover {
       transform: translateY(-10px);
       box-shadow: var(--shadow-2xl);
     }
-
+    
     .product-image-wrapper {
       position: relative;
       height: 300px;
       overflow: hidden;
       background: linear-gradient(135deg, var(--color-gray-100) 0%, var(--color-gray-200) 100%);
     }
-
-.product-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;  /* ✅ Centrar la imagen */
-  transition: transform var(--transition-base);
-}
-
+    
+    .product-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transition: transform var(--transition-base);
+    }
+    
     .product-card:hover .product-image {
       transform: scale(1.05);
     }
-
+    
     .season-badge {
       position: absolute;
       top: 1rem;
@@ -423,15 +503,15 @@ import Layout from '../layouts/Layout.astro';
       color: var(--color-white);
       z-index: 1;
     }
-
+    
     .season-badge.available {
       background: var(--color-secondary);
     }
-
+    
     .season-badge.limited {
       background: var(--color-primary);
     }
-
+    
     .product-info {
       padding: 2rem;
       display: flex;
@@ -439,20 +519,20 @@ import Layout from '../layouts/Layout.astro';
       gap: 1rem;
       flex: 1;
     }
-
+    
     .product-info h3 {
       font-size: 1.5rem;
       color: var(--color-gray-900);
       margin: 0;
     }
-
+    
     .product-subtitle {
       font-size: 1rem;
       color: var(--color-gray-500);
       margin: 0;
       font-weight: 500;
     }
-
+    
     .product-specs {
       list-style: none;
       padding: 0;
@@ -461,40 +541,59 @@ import Layout from '../layouts/Layout.astro';
       flex-direction: column;
       gap: 0.5rem;
     }
-
+    
     .product-specs li {
       font-size: 0.95rem;
       color: var(--color-gray-600);
     }
-
-    .btn-cotizar {
+    
+    /* NUEVO: Contenedor de botones */
+    .product-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
       margin-top: auto;
+    }
+    
+    .btn-cotizar {
       width: 100%;
       justify-content: center;
     }
-
+    
+    .btn-ficha {
+      width: 100%;
+      justify-content: center;
+      font-size: 0.9rem;
+      padding: 0.75rem 1.5rem;
+    }
+    
+    .btn-ficha:hover {
+      background: var(--color-gray-100);
+      transform: translateX(-3px);
+    }
+    
     /* Card "Otros Productos" - Estilo diferente */
     .product-card-others {
       background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
       color: var(--color-white);
     }
-
+    
     .product-card-others .product-info h3,
     .product-card-others .product-subtitle,
     .product-card-others .product-specs li {
       color: var(--color-white);
     }
-
+    
     .product-card-others .btn-outline {
       border-color: var(--color-white);
       color: var(--color-white);
     }
-
+    
     .product-card-others .btn-outline:hover {
       background: var(--color-white);
       color: var(--color-primary);
     }
-
+    
     /* CTA Final */
     .productos-cta {
       background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
@@ -504,58 +603,57 @@ import Layout from '../layouts/Layout.astro';
       text-align: center;
       margin-top: 4rem;
     }
-
+    
     .productos-cta h2 {
       font-size: 2rem;
       margin-bottom: 1rem;
       color: var(--color-white);
     }
-
+    
     .productos-cta p {
       font-size: 1.125rem;
       color: rgba(255, 255, 255, 0.9);
       margin-bottom: 2rem;
     }
-
+    
     .cta-buttons {
       display: flex;
       gap: 1rem;
       justify-content: center;
       flex-wrap: wrap;
     }
-
+    
     /* Responsive */
     @media (max-width: 1024px) {
       .products-grid {
         grid-template-columns: repeat(2, 1fr);
       }
     }
-
+    
     @media (max-width: 768px) {
       .productos-page {
         padding: 8rem 0 3rem;
       }
-
+      
       .products-grid {
         grid-template-columns: 1fr;
       }
-
+      
       .page-header h1 {
         font-size: 2rem;
       }
-
+      
       .productos-cta {
         padding: 3rem 2rem;
       }
-
+      
       .cta-buttons {
         flex-direction: column;
       }
-
+      
       .cta-buttons .btn {
         width: 100%;
       }
     }
   </style>
-
 </Layout>

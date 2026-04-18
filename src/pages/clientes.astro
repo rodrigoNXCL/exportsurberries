@@ -11,7 +11,7 @@ import Layout from '../layouts/Layout.astro';
       <div class="portal-content">
         <div class="portal-header">
           <h2>Portal de Clientes</h2>
-          <p>Área restringida para generación de cotizaciones profesionales y gestión de documentos.</p>
+          <p>Área restringida para generación de cotizaciones y gestión de documentos.</p>
         </div>
 
         <div class="portal-login-card">
@@ -22,16 +22,16 @@ import Layout from '../layouts/Layout.astro';
             </svg>
           </div>
 
-          <h3>🔐 Acceso Restringido</h3>
+          <h3>🔐 Acceso a Cotizaciones</h3>
           <p class="login-description">
-            Accede al generador de cotizaciones profesionales con los datos de Exportadora Sur Berries SpA.
-            Requiere contraseña proporcionada por nuestro equipo comercial.
+            Cotizaciones de Exportadora Sur Berries SpA.
+            ¿Dudas? Háblanos contacto@exportsurberries.com
           </p>
 
           <div class="login-actions">
             {/* BOTÓN PRINCIPAL - Portal de Cotizaciones */}
             <a href="/portal" class="btn btn-primary btn-portal-access">
-              🔐 Acceso Restringido
+              🔐 Uso Interno
               <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
                 <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
               </svg>
@@ -39,7 +39,7 @@ import Layout from '../layouts/Layout.astro';
             
             {/* Botones secundarios */}
             <a href="/cotizar" class="btn btn-outline">
-              Cotización Pública
+              Acceso Clientes
             </a>
             <a href="mailto:contacto@exportsurberries.cl" class="btn btn-outline">
               Soporte
