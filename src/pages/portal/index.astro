@@ -1,183 +1,217 @@
 ---
 // Portal de Clientes - Login
-export const prerender = false;  // ← AGREGAR ESTA LÍNEA
-import Layout from '../../layouts/Layout.astro';
-
-// 🔐 Password fija (el cliente debe manejarla con cuidado)
-const PORTAL_PASSWORD = "SurBerries2026!";
+export const prerender = false;
 ---
 
-<Layout title="Portal de Clientes" description="Acceso restringido" lang="es">
-  
-  <main class="portal-login">
-    <div class="login-container">
-      <div class="login-header">
-        <img src="/images/logo-surberries.png" alt="Exportadora Sur Berries" class="login-logo" />
-        <h1>Portal de Clientes</h1>
-        <p>Acceso restringido para generación de cotizaciones</p>
-      </div>
-
-      <form id="portalLoginForm" class="login-form">
-        <div class="form-group">
-          <label for="password">Contraseña de acceso</label>
-          <input 
-            type="password" 
-            id="password" 
-            name="password" 
-            placeholder="Ingresa la contraseña..."
-            required
-            class="form-input"
-          />
-        </div>
-        
-        <button type="submit" class="btn btn-primary btn-full">
-          Acceder al Portal
-        </button>
-        
-        <p class="login-hint">
-          <small>⚠️ La contraseña es confidencial. No la compartas.</small>
-        </p>
-      </form>
-
-      <div class="login-footer">
-        <a href="/" class="btn btn-outline">← Volver al Sitio</a>
-      </div>
-    </div>
-  </main>
-
-<script>
-  const PORTAL_PASSWORD = "SurBerries2026!";
-  
-  console.log('🔐 [PORTAL] Página cargada');
-  
-  document.getElementById('portalLoginForm')?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const input = document.getElementById('password').value;
-    
-    console.log('🔐 [PORTAL] Intento de login');
-    
-    if (input === PORTAL_PASSWORD) {
-      console.log('✅ [PORTAL] Contraseña correcta');
-      
-      sessionStorage.setItem('portalAuth', 'true');
-      sessionStorage.setItem('portalAuthTime', Date.now().toString());
-      
-      console.log('✅ [PORTAL] sessionStorage guardado');
-      console.log('📊 [PORTAL] Auth:', sessionStorage.getItem('portalAuth'));
-      
-      // Feedback visual antes de redirigir
-      const btn = e.target.querySelector('button[type="submit"]');
-      btn.textContent = '✅ Autenticando...';
-      btn.disabled = true;
-      
-      setTimeout(() => {
-        console.log('🔄 [PORTAL] Redirigiendo a cotizaciones');
-        window.location.href = '/portal/cotizaciones';
-      }, 800);
-    } else {
-      console.log('❌ [PORTAL] Contraseña incorrecta');
-      alert('❌ Contraseña incorrecta');
-    }
-  });
-  
-  // Verificar si ya está autenticado al cargar
-  window.addEventListener('DOMContentLoaded', () => {
-    const auth = sessionStorage.getItem('portalAuth');
-    console.log('📊 [PORTAL] Auth existente:', auth);
-    if (auth === 'true') {
-      window.location.href = '/portal/cotizaciones';
-    }
-  });
-</script>
-
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal de Clientes - Exportadora Sur Berries</title>
   <style>
-    .portal-login {
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 4rem 2rem;
-      background: linear-gradient(135deg, var(--color-off-white) 0%, var(--color-gray-100) 100%);
+      padding: 2rem;
     }
-
     .login-container {
-      max-width: 480px;
+      max-width: 450px;
       width: 100%;
-      background: var(--color-white);
+      background: white;
       padding: 3rem;
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-xl);
+      border-radius: 15px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
       text-align: center;
     }
-
-    .login-header {
-      margin-bottom: 2.5rem;
-    }
-
     .login-logo {
       max-width: 180px;
       height: auto;
       margin-bottom: 1.5rem;
     }
-
-    .login-header h1 {
-      font-size: 1.75rem;
+    .login-container h1 {
+      color: #1e3c2a;
       margin-bottom: 0.5rem;
-      color: var(--color-gray-900);
+      font-size: 1.75rem;
     }
-
-    .login-header p {
-      color: var(--color-gray-600);
-      font-size: 1rem;
+    .login-container p {
+      color: #666;
+      margin-bottom: 2rem;
     }
-
-    .login-form {
-      text-align: left;
-    }
-
     .form-group {
       margin-bottom: 1.5rem;
+      text-align: left;
     }
-
     .form-group label {
       display: block;
       font-weight: 600;
       margin-bottom: 0.5rem;
-      color: var(--color-gray-900);
+      color: #333;
     }
-
     .form-input {
       width: 100%;
       padding: 1rem;
-      border: 2px solid var(--color-gray-200);
-      border-radius: var(--radius-md);
+      border: 2px solid #dee2e6;
+      border-radius: 8px;
       font-size: 1rem;
-      transition: border-color 0.3s ease;
+      transition: border-color 0.3s;
     }
-
     .form-input:focus {
       outline: none;
-      border-color: var(--color-primary);
+      border-color: #1e3c2a;
     }
-
-    .btn-full {
+    .btn-login {
       width: 100%;
       padding: 1rem;
+      background: linear-gradient(135deg, #1e3c2a 0%, #2d5a3d 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
       font-size: 1.1rem;
-      margin-bottom: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s;
     }
-
+    .btn-login:hover {
+      transform: translateY(-2px);
+    }
     .login-hint {
-      text-align: center;
-      color: var(--color-gray-500);
-      margin: 1rem 0;
+      margin-top: 1.5rem;
+      font-size: 0.85rem;
+      color: #856404;
+      background: #fff3cd;
+      padding: 1rem;
+      border-radius: 6px;
+      border: 1px solid #ffc107;
     }
-
-    .login-footer {
-      text-align: center;
-      margin-top: 2rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid var(--color-gray-200);
+    .error-message {
+      background: #f8d7da;
+      color: #721c24;
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 1.5rem;
+      display: none;
+    }
+    .back-link {
+      margin-top: 1.5rem;
+      display: inline-block;
+      color: #1e3c2a;
+      text-decoration: none;
+    }
+    .back-link:hover {
+      text-decoration: underline;
     }
   </style>
-</Layout>
+</head>
+<body>
+  <div class="login-container">
+    <img src="/images/logo-surberries.png" alt="Exportadora Sur Berries" class="login-logo" />
+    <h1>Portal de Clientes</h1>
+    <p>Acceso restringido para generación de cotizaciones</p>
+    
+    <div id="errorMessage" class="error-message"></div>
+    
+    <form id="portalLoginForm">
+      <div class="form-group">
+        <label for="password">Contraseña de acceso</label>
+        <input 
+          type="password" 
+          id="password" 
+          class="form-input" 
+          placeholder="Ingresa la contraseña..."
+          required
+          autocomplete="off"
+        />
+      </div>
+      
+      <button type="submit" class="btn-login">Acceder al Portal</button>
+    </form>
+    
+    <div class="login-hint">
+      ⚠️ La contraseña es confidencial. No la compartas.
+    </div>
+    
+    <a href="/" class="back-link">← Volver al Sitio</a>
+  </div>
+
+  <script>
+    const PORTAL_PASSWORD = "SurBerries2026!";
+    
+    console.log('🔐 [PORTAL LOGIN] Página cargada');
+    console.log('🔐 [PORTAL LOGIN] URL actual:', window.location.href);
+    
+    // Verificar si ya está autenticado al cargar
+    window.addEventListener('DOMContentLoaded', function() {
+      const auth = sessionStorage.getItem('portalAuth');
+      const authTime = sessionStorage.getItem('portalAuthTime');
+      console.log('📊 [PORTAL LOGIN] Auth existente:', auth);
+      console.log('📊 [PORTAL LOGIN] Time existente:', authTime);
+      
+      if (auth === 'true') {
+        console.log('🔄 [PORTAL LOGIN] Ya autenticado, redirigiendo...');
+        window.location.href = '/portal/cotizaciones';
+      }
+    });
+    
+    document.getElementById('portalLoginForm')?.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const passwordInput = document.getElementById('password');
+      const errorMessage = document.getElementById('errorMessage');
+      const inputPassword = passwordInput.value;
+      
+      console.log('🔐 [PORTAL LOGIN] Intento de acceso');
+      console.log('🔐 [PORTAL LOGIN] Password ingresado:', inputPassword ? '***' : 'vacío');
+      
+      try {
+        if (inputPassword === PORTAL_PASSWORD) {
+          console.log('✅ [PORTAL LOGIN] Contraseña correcta');
+          
+          // Guardar sesión con timestamp
+          sessionStorage.setItem('portalAuth', 'true');
+          sessionStorage.setItem('portalAuthTime', Date.now().toString());
+          
+          console.log('✅ [PORTAL LOGIN] sessionStorage establecido');
+          console.log('📊 [PORTAL LOGIN] Auth:', sessionStorage.getItem('portalAuth'));
+          console.log('📊 [PORTAL LOGIN] Time:', sessionStorage.getItem('portalAuthTime'));
+          
+          // Mostrar mensaje de éxito
+          errorMessage.style.display = 'block';
+          errorMessage.style.background = '#d4edda';
+          errorMessage.style.color = '#155724';
+          errorMessage.textContent = '✅ Autenticación exitosa. Redirigiendo...';
+          
+          // Cambiar texto del botón
+          const btn = e.target.querySelector('button[type="submit"]');
+          btn.textContent = '✅ Autenticando...';
+          btn.disabled = true;
+          
+          // Redirigir después de 1 segundo
+          setTimeout(() => {
+            console.log('🔄 [PORTAL LOGIN] Redirigiendo a /portal/cotizaciones');
+            window.location.href = '/portal/cotizaciones';
+          }, 1000);
+          
+        } else {
+          console.log('❌ [PORTAL LOGIN] Contraseña incorrecta');
+          errorMessage.style.display = 'block';
+          errorMessage.style.background = '#f8d7da';
+          errorMessage.style.color = '#721c24';
+          errorMessage.textContent = '❌ Contraseña incorrecta. Intenta nuevamente.';
+          passwordInput.value = '';
+          passwordInput.focus();
+        }
+      } catch (error) {
+        console.error('❌ [PORTAL LOGIN] Error:', error);
+        errorMessage.style.display = 'block';
+        errorMessage.textContent = '❌ Error de autenticación. Verifica la consola.';
+      }
+    });
+  </script>
+</body>
+</html>
