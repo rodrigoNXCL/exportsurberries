@@ -1,5 +1,6 @@
 ---
 // Portal de Clientes - Login
+export const prerender = false;  // ← AGREGAR ESTA LÍNEA
 import Layout from '../../layouts/Layout.astro';
 
 // 🔐 Password fija (el cliente debe manejarla con cuidado)
@@ -47,16 +48,44 @@ const PORTAL_PASSWORD = "SurBerries2026!";
 <script>
   const PORTAL_PASSWORD = "SurBerries2026!";
   
+  console.log('🔐 [PORTAL] Página cargada');
+  
   document.getElementById('portalLoginForm')?.addEventListener('submit', (e) => {
     e.preventDefault();
     const input = document.getElementById('password').value;
     
+    console.log('🔐 [PORTAL] Intento de login');
+    
     if (input === PORTAL_PASSWORD) {
+      console.log('✅ [PORTAL] Contraseña correcta');
+      
       sessionStorage.setItem('portalAuth', 'true');
       sessionStorage.setItem('portalAuthTime', Date.now().toString());
-      window.location.href = '/portal/cotizaciones';
+      
+      console.log('✅ [PORTAL] sessionStorage guardado');
+      console.log('📊 [PORTAL] Auth:', sessionStorage.getItem('portalAuth'));
+      
+      // Feedback visual antes de redirigir
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.textContent = '✅ Autenticando...';
+      btn.disabled = true;
+      
+      setTimeout(() => {
+        console.log('🔄 [PORTAL] Redirigiendo a cotizaciones');
+        window.location.href = '/portal/cotizaciones';
+      }, 800);
     } else {
+      console.log('❌ [PORTAL] Contraseña incorrecta');
       alert('❌ Contraseña incorrecta');
+    }
+  });
+  
+  // Verificar si ya está autenticado al cargar
+  window.addEventListener('DOMContentLoaded', () => {
+    const auth = sessionStorage.getItem('portalAuth');
+    console.log('📊 [PORTAL] Auth existente:', auth);
+    if (auth === 'true') {
+      window.location.href = '/portal/cotizaciones';
     }
   });
 </script>
