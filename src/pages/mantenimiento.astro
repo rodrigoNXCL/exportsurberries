@@ -1,6 +1,6 @@
 ---
-// Página de Mantenimiento - NO usa Layout
-export const prerender = false;
+// Página de Mantenimiento - ESTÁTICA
+export const prerender = true;
 ---
 <!DOCTYPE html>
 <html lang="es">
@@ -19,7 +19,6 @@ export const prerender = false;
       justify-content: center;
       padding: 2rem;
       text-align: center;
-      color: #333;
     }
     .container {
       max-width: 600px;
@@ -30,39 +29,18 @@ export const prerender = false;
     }
     .logo {
       max-width: 180px;
+      height: auto;
       margin-bottom: 2rem;
     }
-    h1 {
-      color: #1e3c2a;
-      font-size: 1.75rem;
-      margin-bottom: 1rem;
-    }
-    p {
-      color: #666;
-      line-height: 1.6;
-      margin-bottom: 1.5rem;
-    }
-    .contact-box {
-      background: #f8f9fa;
-      padding: 1.5rem;
-      border-radius: 10px;
+    h1 { color: #1e3c2a; margin-bottom: 1rem; font-size: 1.75rem; }
+    p { color: #666; line-height: 1.6; margin: 1rem 0; }
+    .contact { 
+      background: #f8f9fa; 
+      padding: 1.5rem; 
+      border-radius: 10px; 
       margin: 1.5rem 0;
-      text-align: left;
     }
-    .contact-box strong {
-      color: #1e3c2a;
-      display: block;
-      margin-bottom: 0.5rem;
-    }
-    .contact-box p {
-      margin: 0.25rem 0;
-      font-size: 0.95rem;
-    }
-    .footer {
-      margin-top: 2rem;
-      font-size: 0.85rem;
-      color: #888;
-    }
+    .contact strong { color: #1e3c2a; display: block; margin-bottom: 0.5rem; }
     .badge {
       display: inline-block;
       background: #ffc107;
@@ -77,22 +55,16 @@ export const prerender = false;
 </head>
 <body>
   <div class="container">
-    <img src="/images/logo-surberries.png" alt="Exportadora Sur Berries" class="logo" />
+    <img src="./images/logo-surberries.png" alt="Exportadora Sur Berries" class="logo" />
     <span class="badge">⚠️ Mantenimiento Programado</span>
     <h1>Sitio en Mantenimiento</h1>
-    <p>
-      Este sitio se encuentra temporalmente en mantenimiento programado.
-    </p>
-    
-    <div class="contact-box">
+    <p>Este sitio se encuentra temporalmente en mantenimiento programado.</p>
+    <div class="contact">
       <strong>Para consultas comerciales, favor contactar a:</strong>
       <p>📧 contacto@exportsurberries.com</p>
       <p>📱 +56 9 5900 8508</p>
     </div>
-    
-    <p class="footer">
-      Disculpe las molestias.
-    </p>
+    <p style="color: #888; font-size: 0.85rem;">Disculpe las molestias.</p>
   </div>
 </body>
 </html>
