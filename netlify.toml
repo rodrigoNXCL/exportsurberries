@@ -2,15 +2,17 @@
   command = "npm run build"
   publish = "dist"
 
-# ⚠️ EXCEPCIÓN PRIMERO: Portal NO redirigir
+# 🔴 MANTENIMIENTO ACTIVO - Redirigir TODO
 [[redirects]]
-  from = "/portal/*"
-  to = "/portal/:splat"
+  from = "/*"
+  to = "/mantenimiento"
   status = 200
   force = true
 
-# Redirect general para el resto del sitio (DESPUÉS)
+# ✅ EXCEPCIÓN: Tú puedes acceder con query param secreto
 [[redirects]]
   from = "/*"
-  to = "/index.html"
+  to = "/:splat"
   status = 200
+  query = {access = "nxCL2026"}
+  force = true
