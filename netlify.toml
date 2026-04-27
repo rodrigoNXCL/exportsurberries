@@ -2,9 +2,15 @@
   command = "npm run build"
   publish = "dist"
 
-# Redirect TODO a /mantenimiento
+# ⚠️ EXCEPCIÓN PRIMERO: Portal NO redirigir
 [[redirects]]
-  from = "/*"
-  to = "/mantenimiento"
+  from = "/portal/*"
+  to = "/portal/:splat"
   status = 200
   force = true
+
+# Redirect general para el resto del sitio (DESPUÉS)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
