@@ -2,17 +2,17 @@
   command = "npm run build"
   publish = "dist"
 
-# 🔴 MANTENIMIENTO ACTIVO - Redirigir TODO
-[[redirects]]
-  from = "/*"
-  to = "/mantenimiento"
-  status = 200
-  force = true
-
-# ✅ EXCEPCIÓN: Tú puedes acceder con query param secreto
+# ✅ PRIMERO: Excepción para que tú puedas acceder
 [[redirects]]
   from = "/*"
   to = "/:splat"
   status = 200
   query = {access = "nxCL2026"}
+  force = true
+
+# 🔴 DESPUÉS: Redirect general a mantenimiento
+[[redirects]]
+  from = "/*"
+  to = "/mantenimiento"
+  status = 200
   force = true
