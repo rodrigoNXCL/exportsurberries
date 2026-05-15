@@ -4,25 +4,26 @@
 import Layout from '../../layouts/Layout.astro';
 ---
 
-<Layout title="Products" description="IQF frozen strawberries, blueberries, raspberries and asparagus of the highest quality. Export from Chile." lang="en">
-  
+<Layout 
+  title="Products" 
+  description="IQF frozen strawberries, blueberries, raspberries and asparagus of the highest quality. Export from Chile." 
+  lang="en"
+>
   <main class="productos-page">
     <div class="container-custom">
-      
       {/* Page Header */}
       <div class="page-header">
         <h1>Our Products</h1>
         <p>IQF (Individual Quick Frozen) fruits and vegetables of the highest quality, grown in the central valley of Chile.</p>
       </div>
-      
+
       {/* Products Grid */}
       <div class="products-grid">
-        
         {/* Product 1: Blueberries */}
         <article class="product-card" data-producto="arandano">
           <div class="product-image-wrapper">
-            <img 
-              src="/images/products/arandano-iqf.webp" 
+            <img
+              src="/images/products/arandano-iqf.webp"
               alt="IQF Frozen Blueberries - Exportadora Surberries"
               width="800"
               height="800"
@@ -31,18 +32,15 @@ import Layout from '../../layouts/Layout.astro';
             />
             <span class="season-badge available">Available</span>
           </div>
-          
           <div class="product-info">
             <h3>IQF Blueberries</h3>
             <p class="product-subtitle">Caliber 10 Up</p>
-            
             <ul class="product-specs">
               <li>✓ IQF (Individually Quick Frozen)</li>
               <li>✓ Boxes 30lbs / 13.61</li>
               <li>✓ Varieties: Legacy, O'Neal, Brigitta, Ochlockonee</li>
               <li>✓ Season: Nov - Apr</li>
             </ul>
-            
             <div class="product-buttons">
               <a href="/en/cotizar?producto=arandano-iqf" class="btn btn-primary btn-cotizar">
                 Quote Blueberries
@@ -53,12 +51,12 @@ import Layout from '../../layouts/Layout.astro';
             </div>
           </div>
         </article>
-        
+
         {/* Product 2: Raspberries */}
         <article class="product-card" data-producto="frambuesa">
           <div class="product-image-wrapper">
-            <img 
-              src="/images/products/frambuesa-iqf.webp" 
+            <img
+              src="/images/products/frambuesa-iqf.webp"
               alt="IQF Frozen Raspberries - Exportadora Surberries"
               width="800"
               height="800"
@@ -67,18 +65,15 @@ import Layout from '../../layouts/Layout.astro';
             />
             <span class="season-badge available">Available</span>
           </div>
-          
           <div class="product-info">
             <h3>IQF Raspberries</h3>
             <p class="product-subtitle">Summer / Fall</p>
-            
             <ul class="product-specs">
               <li>✓ IQF (Individually Quick Frozen)</li>
               <li>✓ Boxes 10kg / 2.5kg</li>
               <li>✓ Premium Grade</li>
               <li>✓ Season: Dec - Mar</li>
             </ul>
-            
             <div class="product-buttons">
               <a href="/en/cotizar?producto=frambuesa-iqf" class="btn btn-primary btn-cotizar">
                 Quote Raspberries
@@ -89,12 +84,12 @@ import Layout from '../../layouts/Layout.astro';
             </div>
           </div>
         </article>
-        
+
         {/* Product 3: Blackberry */}
         <article class="product-card" data-producto="mora">
           <div class="product-image-wrapper">
-            <img 
-              src="/images/products/mora-iqf.webp" 
+            <img
+              src="/images/products/mora-iqf.webp"
               alt="Frozen IQF Blackberry - Surberries Exporter"
               width="800"
               height="800"
@@ -103,18 +98,15 @@ import Layout from '../../layouts/Layout.astro';
             />
             <span class="season-badge available">Available</span>
           </div>
-          
           <div class="product-info">
             <h3>Blackberry IQF</h3>
             <p class="product-subtitle">High Grade</p>
-            
             <ul class="product-specs">
               <li>✓ IQF (Individually Quick Frozen)</li>
               <li>✓ Cases 30lbs / 13.61</li>
               <li>✓ High Grade</li>
               <li>✓ Season: Dec - Mar</li>
             </ul>
-            
             <div class="product-buttons">
               <a href="/en/cotizar?producto=mora-iqf" class="btn btn-primary btn-cotizar">
                 Request Quote
@@ -125,12 +117,12 @@ import Layout from '../../layouts/Layout.astro';
             </div>
           </div>
         </article>
-        
+
         {/* Product 4: Cherry */}
         <article class="product-card" data-producto="cereza">
           <div class="product-image-wrapper">
-            <img 
-              src="/images/products/cereza-iqf.webp" 
+            <img
+              src="/images/products/cereza-iqf.webp"
               alt="Frozen IQF Cherry - Surberries Exporter"
               width="800"
               height="800"
@@ -139,18 +131,15 @@ import Layout from '../../layouts/Layout.astro';
             />
             <span class="season-badge available">Available</span>
           </div>
-          
           <div class="product-info">
             <h3>Cherry IQF</h3>
             <p class="product-subtitle">High Grade / Pitted</p>
-            
             <ul class="product-specs">
               <li>✓ IQF (Individually Quick Frozen)</li>
               <li>✓ Cases 10kg</li>
               <li>✓ Varieties: Bing / Lapins</li>
               <li>✓ Season: Dec - Feb</li>
             </ul>
-            
             <div class="product-buttons">
               <a href="/en/cotizar?producto=cereza-iqf" class="btn btn-primary btn-cotizar">
                 Request Quote
@@ -161,12 +150,12 @@ import Layout from '../../layouts/Layout.astro';
             </div>
           </div>
         </article>
-        
+
         {/* Product 5: Strawberries */}
         <article class="product-card" data-producto="frutilla">
           <div class="product-image-wrapper">
-            <img 
-              src="/images/products/frutilla-iqf.webp" 
+            <img
+              src="/images/products/frutilla-iqf.webp"
               alt="IQF Frozen Strawberries - Exportadora Surberries"
               width="800"
               height="800"
@@ -175,18 +164,15 @@ import Layout from '../../layouts/Layout.astro';
             />
             <span class="season-badge available">Available</span>
           </div>
-          
           <div class="product-info">
             <h3>IQF Strawberries</h3>
             <p class="product-subtitle">High Grade</p>
-            
             <ul class="product-specs">
               <li>✓ IQF (Individually Quick Frozen)</li>
               <li>✓ Boxes 30lbs / 13.61</li>
               <li>✓ Brix: 8-10°</li>
               <li>✓ Season: Nov - Mar</li>
             </ul>
-            
             <div class="product-buttons">
               <a href="/en/cotizar?producto=frutilla-iqf" class="btn btn-primary btn-cotizar">
                 Quote Strawberries
@@ -197,12 +183,12 @@ import Layout from '../../layouts/Layout.astro';
             </div>
           </div>
         </article>
-        
+
         {/* Product 6: Asparagus */}
         <article class="product-card" data-producto="esparrago">
           <div class="product-image-wrapper">
-            <img 
-              src="/images/products/esparrago-iqf.webp" 
+            <img
+              src="/images/products/esparrago-iqf.webp"
               alt="IQF Frozen Asparagus - Exportadora Surberries"
               width="800"
               height="800"
@@ -211,18 +197,15 @@ import Layout from '../../layouts/Layout.astro';
             />
             <span class="season-badge limited">Season Closed</span>
           </div>
-          
           <div class="product-info">
             <h3>IQF Asparagus</h3>
             <p class="product-subtitle">Green</p>
-            
             <ul class="product-specs">
               <li>✓ IQF (Tips / Whole)</li>
               <li>✓ Boxes 10kg / Bundles</li>
               <li>✓ Caliber: S / M / L</li>
               <li>✓ Season: Aug - Nov</li>
             </ul>
-            
             <div class="product-buttons">
               <a href="/en/cotizar?producto=esparrago-iqf" class="btn btn-primary btn-cotizar">
                 Quote Asparagus
@@ -233,12 +216,12 @@ import Layout from '../../layouts/Layout.astro';
             </div>
           </div>
         </article>
-        
+
         {/* Product 7: Other Products */}
         <article class="product-card product-card-others" data-producto="otros">
           <div class="product-image-wrapper">
-            <img 
-              src="/images/products/otros-productos.webp" 
+            <img
+              src="/images/products/otros-productos.webp"
               alt="Other Frozen Products - Exportadora Surberries"
               width="800"
               height="800"
@@ -246,29 +229,26 @@ import Layout from '../../layouts/Layout.astro';
               class="product-image"
             />
           </div>
-          
           <div class="product-info">
             <h3>Looking for another product?</h3>
             <p class="product-subtitle">We have more options</p>
-            
             <ul class="product-specs">
               <li>🫐 IQF Blackberries</li>
               <li>🍓 Berries Mix</li>
               <li>🥬 IQF Spinach</li>
               <li>🥦 IQF Broccoli</li>
             </ul>
-            
             <a href="/en/cotizar" class="btn btn-outline btn-cotizar">
               Check Availability
             </a>
           </div>
         </article>
-        
+
         {/* Product 8: Boletus Mushroom */}
         <article class="product-card" data-producto="boletus">
           <div class="product-image-wrapper">
-            <img 
-              src="/images/products/boletus-iqf.webp" 
+            <img
+              src="/images/products/boletus-iqf.webp"
               alt="Frozen IQF Boletus Mushroom - Surberries Exporter"
               width="800"
               height="800"
@@ -277,18 +257,15 @@ import Layout from '../../layouts/Layout.astro';
             />
             <span class="season-badge available">Available</span>
           </div>
-          
           <div class="product-info">
             <h3>Boletus Mushroom IQF</h3>
             <p class="product-subtitle">Wild Grade</p>
-            
             <ul class="product-specs">
               <li>✓ IQF (Individually Quick Frozen)</li>
               <li>✓ Cases 10kg</li>
               <li>✓ Grade: A / B</li>
               <li>✓ Season: Mar - Jun</li>
             </ul>
-            
             <div class="product-buttons">
               <a href="/en/cotizar?producto=boletus-iqf" class="btn btn-primary btn-cotizar">
                 Request Quote
@@ -299,12 +276,12 @@ import Layout from '../../layouts/Layout.astro';
             </div>
           </div>
         </article>
-        
+
         {/* Product 9: Grape IQF */}
         <article class="product-card" data-producto="uva">
           <div class="product-image-wrapper">
-            <img 
-              src="/images/products/uva-iqf.webp" 
+            <img
+              src="/images/products/uva-iqf.webp"
               alt="Frozen IQF Grapes - Surberries Exporter"
               width="800"
               height="800"
@@ -313,18 +290,15 @@ import Layout from '../../layouts/Layout.astro';
             />
             <span class="season-badge available">Available</span>
           </div>
-          
           <div class="product-info">
             <h3>Grape IQF</h3>
             <p class="product-subtitle">Seedless / With Seeds</p>
-            
             <ul class="product-specs">
               <li>✓ IQF (Individually Quick Frozen)</li>
               <li>✓ Cases 10kg / 20kg Bag of Fresh</li>
               <li>✓ Varieties: Red / Green / Black</li>
               <li>✓ Season: Jan - May</li>
             </ul>
-            
             <div class="product-buttons">
               <a href="/en/cotizar?producto=uva-iqf" class="btn btn-primary btn-cotizar">
                 Request Quote
@@ -335,12 +309,12 @@ import Layout from '../../layouts/Layout.astro';
             </div>
           </div>
         </article>
-        
+
         {/* Product 10: Chestnuts IQF */}
         <article class="product-card" data-producto="castana">
           <div class="product-image-wrapper">
-            <img 
-              src="/images/products/castana-iqf.webp" 
+            <img
+              src="/images/products/castana-iqf.webp"
               alt="Frozen IQF Chestnuts - Surberries Exporter"
               width="800"
               height="800"
@@ -349,18 +323,15 @@ import Layout from '../../layouts/Layout.astro';
             />
             <span class="season-badge available">Available</span>
           </div>
-          
           <div class="product-info">
             <h3>Chestnuts IQF</h3>
             <p class="product-subtitle">Peeled / Whole</p>
-            
             <ul class="product-specs">
               <li>✓ IQF (Individually Quick Frozen)</li>
               <li>✓ Cases 5kg / 2.5kg</li>
               <li>✓ Grade: A / B</li>
               <li>✓ Season: Apr - Jul</li>
             </ul>
-            
             <div class="product-buttons">
               <a href="/en/cotizar?producto=castana-iqf" class="btn btn-primary btn-cotizar">
                 Request Quote
@@ -371,12 +342,12 @@ import Layout from '../../layouts/Layout.astro';
             </div>
           </div>
         </article>
-        
+
         {/* Product 11: Kiwi IQF */}
         <article class="product-card" data-producto="kiwi">
           <div class="product-image-wrapper">
-            <img 
-              src="/images/products/kiwi-iqf.webp" 
+            <img
+              src="/images/products/kiwi-iqf.webp"
               alt="Frozen IQF Kiwi - Surberries Exporter"
               width="800"
               height="800"
@@ -385,18 +356,15 @@ import Layout from '../../layouts/Layout.astro';
             />
             <span class="season-badge available">Available</span>
           </div>
-          
           <div class="product-info">
             <h3>Kiwi IQF</h3>
             <p class="product-subtitle">Green / Golden</p>
-            
             <ul class="product-specs">
               <li>✓ IQF (Individually Quick Frozen)</li>
               <li>✓ Cases 10kg</li>
               <li>✓ Cut: Slices / Dices</li>
               <li>✓ Season: May - Aug</li>
             </ul>
-            
             <div class="product-buttons">
               <a href="/en/cotizar?producto=kiwi-iqf" class="btn btn-primary btn-cotizar">
                 Request Quote
@@ -407,9 +375,8 @@ import Layout from '../../layouts/Layout.astro';
             </div>
           </div>
         </article>
-        
       </div>
-      
+
       {/* Final CTA */}
       <div class="productos-cta">
         <h2>Need a personalized quote?</h2>
@@ -423,41 +390,35 @@ import Layout from '../../layouts/Layout.astro';
           </a>
         </div>
       </div>
-      
     </div>
   </main>
-  
+
   <style>
     .productos-page {
       padding: 10rem 0 4rem;
       background: var(--color-off-white);
       min-height: 100vh;
     }
-    
     .page-header {
       text-align: center;
       max-width: 800px;
       margin: 0 auto 4rem;
     }
-    
     .page-header h1 {
       font-size: 2.5rem;
       margin-bottom: 1rem;
       color: var(--color-gray-900);
     }
-    
     .page-header p {
       font-size: 1.125rem;
       color: var(--color-gray-600);
     }
-    
     .products-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 2rem;
       margin-bottom: 4rem;
     }
-    
     .product-card {
       background: var(--color-white);
       border-radius: var(--radius-xl);
@@ -467,19 +428,16 @@ import Layout from '../../layouts/Layout.astro';
       display: flex;
       flex-direction: column;
     }
-    
     .product-card:hover {
       transform: translateY(-10px);
       box-shadow: var(--shadow-2xl);
     }
-    
     .product-image-wrapper {
       position: relative;
       height: 300px;
       overflow: hidden;
       background: linear-gradient(135deg, var(--color-gray-100) 0%, var(--color-gray-200) 100%);
     }
-    
     .product-image {
       width: 100%;
       height: 100%;
@@ -487,11 +445,9 @@ import Layout from '../../layouts/Layout.astro';
       object-position: center;
       transition: transform var(--transition-base);
     }
-    
     .product-card:hover .product-image {
       transform: scale(1.05);
     }
-    
     .season-badge {
       position: absolute;
       top: 1rem;
@@ -503,15 +459,12 @@ import Layout from '../../layouts/Layout.astro';
       color: var(--color-white);
       z-index: 1;
     }
-    
     .season-badge.available {
       background: var(--color-secondary);
     }
-    
     .season-badge.limited {
       background: var(--color-primary);
     }
-    
     .product-info {
       padding: 2rem;
       display: flex;
@@ -519,20 +472,17 @@ import Layout from '../../layouts/Layout.astro';
       gap: 1rem;
       flex: 1;
     }
-    
     .product-info h3 {
       font-size: 1.5rem;
       color: var(--color-gray-900);
       margin: 0;
     }
-    
     .product-subtitle {
       font-size: 1rem;
       color: var(--color-gray-500);
       margin: 0;
       font-weight: 500;
     }
-    
     .product-specs {
       list-style: none;
       padding: 0;
@@ -541,60 +491,47 @@ import Layout from '../../layouts/Layout.astro';
       flex-direction: column;
       gap: 0.5rem;
     }
-    
     .product-specs li {
       font-size: 0.95rem;
       color: var(--color-gray-600);
     }
-    
-    /* NEW: Button container */
     .product-buttons {
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
       margin-top: auto;
     }
-    
     .btn-cotizar {
       width: 100%;
       justify-content: center;
     }
-    
     .btn-ficha {
       width: 100%;
       justify-content: center;
       font-size: 0.9rem;
       padding: 0.75rem 1.5rem;
     }
-    
     .btn-ficha:hover {
       background: var(--color-gray-100);
       transform: translateX(-3px);
     }
-    
-    /* Card "Other Products" - Different Style */
     .product-card-others {
       background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
       color: var(--color-white);
     }
-    
     .product-card-others .product-info h3,
     .product-card-others .product-subtitle,
     .product-card-others .product-specs li {
       color: var(--color-white);
     }
-    
     .product-card-others .btn-outline {
       border-color: var(--color-white);
       color: var(--color-white);
     }
-    
     .product-card-others .btn-outline:hover {
       background: var(--color-white);
       color: var(--color-primary);
     }
-    
-    /* Final CTA */
     .productos-cta {
       background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
       color: var(--color-white);
@@ -603,54 +540,43 @@ import Layout from '../../layouts/Layout.astro';
       text-align: center;
       margin-top: 4rem;
     }
-    
     .productos-cta h2 {
       font-size: 2rem;
       margin-bottom: 1rem;
       color: var(--color-white);
     }
-    
     .productos-cta p {
       font-size: 1.125rem;
       color: rgba(255, 255, 255, 0.9);
       margin-bottom: 2rem;
     }
-    
     .cta-buttons {
       display: flex;
       gap: 1rem;
       justify-content: center;
       flex-wrap: wrap;
     }
-    
-    /* Responsive */
     @media (max-width: 1024px) {
       .products-grid {
         grid-template-columns: repeat(2, 1fr);
       }
     }
-    
     @media (max-width: 768px) {
       .productos-page {
         padding: 8rem 0 3rem;
       }
-      
       .products-grid {
         grid-template-columns: 1fr;
       }
-      
       .page-header h1 {
         font-size: 2rem;
       }
-      
       .productos-cta {
         padding: 3rem 2rem;
       }
-      
       .cta-buttons {
         flex-direction: column;
       }
-      
       .cta-buttons .btn {
         width: 100%;
       }
