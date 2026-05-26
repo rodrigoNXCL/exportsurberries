@@ -4,69 +4,54 @@ export const prerender = false;
 export async function POST({ request }) {
   try {
     const data = await request.json();
-    const { pathname, referrer } = data;
-
-    if (!pathname) {
-      return new Response(JSON.stringify({ error: 'Pathname requerido' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
-
-    // Importar módulos de Node
+    const { pathname, country = 'Desconocido', countryCode = 'XX', city = 'Desconocida' } = data;
+    
     const fs = await import('fs');
     const path = await import('path');
-    
-    // Ruta al archivo de analytics
     const analyticsFile = path.join(process.cwd(), 'src', 'data', 'analytics.json');
     
-    // Asegurar que el directorio exista
-    const dir = path.dirname(analyticsFile);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-
-    // Leer datos existentes o crear nuevos
-    let analytics = { pages: {}, total: 0, dates: {}, referrers: {}, lastUpdate: null };
+    let analytics = { pages: {}, total: 0, dates: {}, referrers: {}, countries: {}, cities: {} };
     
     try {
-      if (fs.existsSync(analyticsFile)) {
-        const content = fs.readFileSync(analyticsFile, 'utf-8');
-        analytics = JSON.parse(content);
-      }
+      const content = fs.readFileSync(analyticsFile, 'utf-8');
+      analytics = JSON.parse(content);
+      // Asegurar que existan las propiedades nuevas
+      analytics.countries = analytics.countries || {};
+      analytics.cities = analytics.cities || {};
     } catch (e) {
-      console.warn('No se pudo leer el archivo de analytics, creando nuevo:', e.message);
+      console.log('📄 Nuevo archivo de analytics');
     }
-
-    // Actualizar estadísticas
+    
     const today = new Date().toISOString().split('T')[0];
     const now = new Date().toISOString();
     
+    // Incrementar contadores
     analytics.total = (analytics.total || 0) + 1;
     analytics.pages[pathname] = (analytics.pages[pathname] || 0) + 1;
     analytics.dates[today] = (analytics.dates[today] || 0) + 1;
     
-    if (referrer && referrer !== 'direct' && referrer !== window?.location?.origin) {
-      analytics.referrers = analytics.referrers || {};
-      analytics.referrers[referrer] = (analytics.referrers[referrer] || 0) + 1;
-    }
+    // 🌍 NUEVO: Contar países
+    analytics.countries[country] = (analytics.countries[country] || 0) + 1;
+    
+    // 🏙️ NUEVO: Contar ciudades
+    const cityKey = `${city}, ${countryCode}`;
+    analytics.cities[cityKey] = (analytics.cities[cityKey] || 0) + 1;
     
     analytics.lastUpdate = now;
-
-    // Guardar datos
+    
     const content = JSON.stringify(analytics, null, 2);
     fs.writeFileSync(analyticsFile, content, 'utf-8');
-
+    
     return new Response(JSON.stringify({ 
       success: true, 
       total: analytics.total,
-      pathname 
+      country: country 
     }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     });
   } catch (error) {
-    console.error('❌ Error en tracking:', error);
+    console.error('❌ ERROR en tracking:', error);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
