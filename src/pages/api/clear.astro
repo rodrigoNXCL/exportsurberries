@@ -3,36 +3,37 @@ export const prerender = false;
 
 export async function POST({ request }) {
   try {
-    const fs = await import('fs');
-    const path = await import('path');
-    const analyticsFile = path.join(process.cwd(), 'src', 'data', 'analytics.json');
-    
-    console.log('========================================');
-    console.log('🗑️ CLEARING ANALYTICS');
-    console.log('========================================');
-    
-    const emptyData = { 
+    const empty = { 
       pages: {}, 
       total: 0, 
       dates: {}, 
-      referrers: {},
+      referrers: {}, 
       countries: {},
       cities: {},
       lastUpdate: new Date().toISOString()
     };
-    
-    const content = JSON.stringify(emptyData, null, 2);
-    fs.writeFileSync(analyticsFile, content, 'utf-8');
-    
-    console.log('✅ Analytics cleared successfully!');
-    console.log('========================================');
-    
+
+    try {
+      const { getStore } = await import('@netlify/blobs');
+      const store = getStore('surberries_analytics');
+      await store.setJSON('data', empty);
+    } catch (e) {
+      try {
+        const fs = await import('fs');
+        const path = await import('path');
+        const file = path.join(process.cwd(), 'public', 'data', 'analytics.json');
+        fs.writeFileSync(file, JSON.stringify(empty, null, 2), 'utf-8');
+      } catch (e2) {
+        console.error('⚠️ No se pudo limpiar:', e2.message);
+      }
+    }
+
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     });
   } catch (error) {
-    console.error('❌ ERROR clearing analytics:', error);
+    console.error('❌ ERROR clearing:', error);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }

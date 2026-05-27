@@ -14,3 +14,35 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
+=========================================
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# ✅ EXCEPCIÓN: Admin NO redirigir (función serverless)
+[[redirects]]
+  from = "/admin/*"
+  to = "/admin/:splat"
+  status = 200
+  force = true
+
+# ✅ EXCEPCIÓN: API NO redirigir (función serverless)
+[[redirects]]
+  from = "/api/*"
+  to = "/api/:splat"
+  status = 200
+  force = true
+
+# ✅ EXCEPCIÓN: Portal NO redirigir
+[[redirects]]
+  from = "/portal/*"
+  to = "/portal/:splat"
+  status = 200
+  force = true
+
+# Redirect general para el resto del sitio (DESPUÉS)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

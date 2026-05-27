@@ -1,57 +1,94 @@
 ---
 export const prerender = false;
 
-export async function POST({ request }) {
+export async function POST({ request, clientAddress }) {
   try {
     const data = await request.json();
-    const { pathname, country = 'Desconocido', countryCode = 'XX', city = 'Desconocida' } = data;
-    
-    const fs = await import('fs');
-    const path = await import('path');
-    const analyticsFile = path.join(process.cwd(), 'src', 'data', 'analytics.json');
-    
-    let analytics = { pages: {}, total: 0, dates: {}, referrers: {}, countries: {}, cities: {} };
-    
-    try {
-      const content = fs.readFileSync(analyticsFile, 'utf-8');
-      analytics = JSON.parse(content);
-      // Asegurar que existan las propiedades nuevas
-      analytics.countries = analytics.countries || {};
-      analytics.cities = analytics.cities || {};
-    } catch (e) {
-      console.log('📄 Nuevo archivo de analytics');
+    const { pathname } = data;
+
+    if (!pathname) {
+      return new Response(JSON.stringify({ error: 'Pathname requerido' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
+
+    let analytics = { pages: {}, total: 0, dates: {}, referrers: {}, countries: {}, lastUpdate: null };
+
+    // Intentar leer desde Netlify Blobs
+    try {
+      const { getStore } = await import('@netlify/blobs');
+      const store = getStore('surberries_analytics');
+      const stored = await store.get('data', { type: 'json' });
+      if (stored) {
+        analytics = { ...analytics, ...stored };
+      }
+    } catch (e) {
+      console.log('⚠️ Blobs no disponible, usando fallback local');
+      try {
+        const fs = await import('fs');
+        const path = await import('path');
+        const file = path.join(process.cwd(), 'public', 'data', 'analytics.json');
+        if (fs.existsSync(file)) {
+          const content = fs.readFileSync(file, 'utf-8');
+          analytics = JSON.parse(content);
+        }
+      } catch (e2) {
+        console.log('📄 Archivo nuevo');
+      }
+    }
+
+    // Detectar país desde headers de Netlify
+    const clientIp = clientAddress || 
+                     request.headers.get('x-nf-client-connection-ip') || 
+                     request.headers.get('x-forwarded-for')?.split(',')[0] || 
+                     'unknown';
     
+    let countryName = 'Desconocido';
+    let countryCode = 'XX';
+    try {
+      const geoRes = await fetch(`https://ipapi.co/${clientIp}/json/`);
+      if (geoRes.ok) {
+        const geo = await geoRes.json();
+        countryName = geo.country_name || 'Desconocido';
+        countryCode = geo.country_code || 'XX';
+      }
+    } catch (e) {
+      console.log('⚠️ Geo fallback');
+    }
+
     const today = new Date().toISOString().split('T')[0];
-    const now = new Date().toISOString();
     
-    // Incrementar contadores
     analytics.total = (analytics.total || 0) + 1;
     analytics.pages[pathname] = (analytics.pages[pathname] || 0) + 1;
     analytics.dates[today] = (analytics.dates[today] || 0) + 1;
-    
-    // 🌍 NUEVO: Contar países
-    analytics.countries[country] = (analytics.countries[country] || 0) + 1;
-    
-    // 🏙️ NUEVO: Contar ciudades
-    const cityKey = `${city}, ${countryCode}`;
-    analytics.cities[cityKey] = (analytics.cities[cityKey] || 0) + 1;
-    
-    analytics.lastUpdate = now;
-    
-    const content = JSON.stringify(analytics, null, 2);
-    fs.writeFileSync(analyticsFile, content, 'utf-8');
-    
-    return new Response(JSON.stringify({ 
-      success: true, 
-      total: analytics.total,
-      country: country 
-    }), {
+    analytics.countries[countryName] = (analytics.countries[countryName] || 0) + 1;
+    analytics.lastUpdate = new Date().toISOString();
+
+    // Guardar en Netlify Blobs o fallback local
+    try {
+      const { getStore } = await import('@netlify/blobs');
+      const store = getStore('surberries_analytics');
+      await store.setJSON('data', analytics);
+    } catch (e) {
+      try {
+        const fs = await import('fs');
+        const path = await import('path');
+        const file = path.join(process.cwd(), 'public', 'data', 'analytics.json');
+        const dir = path.dirname(file);
+        if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+        fs.writeFileSync(file, JSON.stringify(analytics, null, 2), 'utf-8');
+      } catch (e2) {
+        console.error('⚠️ No se pudo guardar:', e2.message);
+      }
+    }
+
+    return new Response(JSON.stringify({ success: true, total: analytics.total, country: countryName }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     });
   } catch (error) {
-    console.error('❌ ERROR en tracking:', error);
+    console.error('❌ ERROR tracking:', error);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
