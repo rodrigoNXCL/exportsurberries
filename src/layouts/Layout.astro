@@ -51,55 +51,38 @@ import WhatsAppFloat from '../components/WhatsAppFloat.astro';
     <Footer />
     <WhatsAppFloat />
 
-    {/* 📊 TRACKING SCRIPT - Registra visitas en /api/track */}
+    {/*  TRACKING SCRIPT DIRECTO - SIN DEPENDENCIAS EXTERNAS */}
     <script is:inline>
       (function() {
-        // No trackear páginas de admin
-        if (window.location.pathname.includes('/admin/')) {
+        // 1. No trackear páginas de admin ni errores
+        if (window.location.pathname.includes('/admin/') || window.location.pathname.includes('/404')) {
           return;
         }
 
-        // Obtener país del visitante usando API gratuita
-        fetch('https://ipapi.co/json/')
-          .then(response => response.json())
-          .then(geoData => {
-            const country = geoData.country_name || 'Desconocido';
-            const countryCode = geoData.country_code || 'XX';
-            const city = geoData.city || 'Desconocida';
-
-            // Enviar tracking al endpoint
-            fetch('/api/track', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                pathname: window.location.pathname,
-                country: country,
-                countryCode: countryCode,
-                city: city
-              })
-            })
-            .then(response => response.json())
-            .then(data => {
-              console.log('✅ Tracking registrado:', data);
-            })
-            .catch(error => {
-              console.error('❌ Error en tracking:', error);
-            });
+        // 2. Enviar track DIRECTO al API (sin esperar geolocalización externa)
+        // El servidor (Netlify Function) obtendrá la IP y el país internamente.
+        fetch('/api/track', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            pathname: window.location.pathname,
+            // Enviamos valores por defecto, el servidor los puede refinar si quiere
+            country: 'Desconocido', 
+            countryCode: 'XX',
+            city: 'Desconocida'
           })
-          .catch(error => {
-            console.error('❌ Error obteniendo geolocalización:', error);
-            // Si falla la geolocalización, igual enviar tracking sin país
-            fetch('/api/track', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                pathname: window.location.pathname,
-                country: 'Desconocido',
-                countryCode: 'XX',
-                city: 'Desconocida'
-              })
-            }).catch(() => {});
-          });
+        })
+        .then(response => {
+          if (!response.ok) throw new Error('Network response was not ok');
+          return response.json();
+        })
+        .then(data => {
+          console.log('✅ Analytics registrado:', data.total);
+        })
+        .catch(error => {
+          // Silencioso para no molestar al usuario, pero útil para debug en consola
+          console.warn('️ Analytics falló (puede ser bloqueo de red):', error);
+        });
       })();
     </script>
   </body>
