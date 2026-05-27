@@ -1,94 +1,54 @@
 ---
 export const prerender = false;
 
-export async function POST({ request, clientAddress }) {
+import { getStore } from '@netlify/blobs';
+
+export async function POST({ request }) {
   try {
     const data = await request.json();
-    const { pathname } = data;
+    const { pathname, country = 'Desconocido', countryCode = 'XX', city = 'Desconocida' } = data;
 
-    if (!pathname) {
-      return new Response(JSON.stringify({ error: 'Pathname requerido' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
-
-    let analytics = { pages: {}, total: 0, dates: {}, referrers: {}, countries: {}, lastUpdate: null };
-
-    // Intentar leer desde Netlify Blobs
-    try {
-      const { getStore } = await import('@netlify/blobs');
-      const store = getStore('surberries_analytics');
-      const stored = await store.get('data', { type: 'json' });
-      if (stored) {
-        analytics = { ...analytics, ...stored };
-      }
-    } catch (e) {
-      console.log('⚠️ Blobs no disponible, usando fallback local');
-      try {
-        const fs = await import('fs');
-        const path = await import('path');
-        const file = path.join(process.cwd(), 'public', 'data', 'analytics.json');
-        if (fs.existsSync(file)) {
-          const content = fs.readFileSync(file, 'utf-8');
-          analytics = JSON.parse(content);
-        }
-      } catch (e2) {
-        console.log('📄 Archivo nuevo');
-      }
-    }
-
-    // Detectar país desde headers de Netlify
-    const clientIp = clientAddress || 
-                     request.headers.get('x-nf-client-connection-ip') || 
-                     request.headers.get('x-forwarded-for')?.split(',')[0] || 
-                     'unknown';
+    // ✅ USAR NETLIFY BLOBS (Persistente en Producción)
+    const store = getStore({ name: 'surberries_analytics', consistency: 'strong' });
     
-    let countryName = 'Desconocido';
-    let countryCode = 'XX';
+    let analytics = { pages: {}, total: 0, dates: {}, referrers: {}, countries: {}, cities: {}, lastUpdate: null };
+
     try {
-      const geoRes = await fetch(`https://ipapi.co/${clientIp}/json/`);
-      if (geoRes.ok) {
-        const geo = await geoRes.json();
-        countryName = geo.country_name || 'Desconocido';
-        countryCode = geo.country_code || 'XX';
-      }
+      const stored = await store.get('data', { type: 'json' });
+      if (stored) analytics = stored;
     } catch (e) {
-      console.log('⚠️ Geo fallback');
+      console.log(' Nuevo almacén o error de lectura');
     }
 
     const today = new Date().toISOString().split('T')[0];
-    
+    const now = new Date().toISOString();
+
+    // Actualizar contadores
     analytics.total = (analytics.total || 0) + 1;
     analytics.pages[pathname] = (analytics.pages[pathname] || 0) + 1;
     analytics.dates[today] = (analytics.dates[today] || 0) + 1;
-    analytics.countries[countryName] = (analytics.countries[countryName] || 0) + 1;
-    analytics.lastUpdate = new Date().toISOString();
+    analytics.lastUpdate = now;
 
-    // Guardar en Netlify Blobs o fallback local
-    try {
-      const { getStore } = await import('@netlify/blobs');
-      const store = getStore('surberries_analytics');
-      await store.setJSON('data', analytics);
-    } catch (e) {
-      try {
-        const fs = await import('fs');
-        const path = await import('path');
-        const file = path.join(process.cwd(), 'public', 'data', 'analytics.json');
-        const dir = path.dirname(file);
-        if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-        fs.writeFileSync(file, JSON.stringify(analytics, null, 2), 'utf-8');
-      } catch (e2) {
-        console.error('⚠️ No se pudo guardar:', e2.message);
-      }
+    // Geolocalización
+    if (country && country !== 'Desconocido') {
+      analytics.countries = analytics.countries || {};
+      analytics.countries[country] = (analytics.countries[country] || 0) + 1;
+      
+      const cityKey = `${city}, ${countryCode}`;
+      analytics.cities = analytics.cities || {};
+      analytics.cities[cityKey] = (analytics.cities[cityKey] || 0) + 1;
     }
 
-    return new Response(JSON.stringify({ success: true, total: analytics.total, country: countryName }), {
+    // Guardar en Blobs
+    await store.set('data', JSON.stringify(analytics));
+
+    return new Response(JSON.stringify({ success: true, total: analytics.total }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     });
+
   } catch (error) {
-    console.error('❌ ERROR tracking:', error);
+    console.error(' ERROR TRACK:', error);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }

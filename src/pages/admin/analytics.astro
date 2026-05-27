@@ -1,55 +1,40 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { getStore } from '@netlify/blobs';
+
 export const prerender = false;
 
-const ADMIN_PASSWORD = "SurBerries2026!";
+// ✅ CLAVE CORRECTA: SurBerries2026! (Coincide con Netlify Env)
+const ADMIN_PASSWORD = import.meta.env.ADMIN_PASSWORD || "SurBerries2026!";
 
-let analytics = { pages: {}, total: 0, dates: {}, referrers: {}, countries: {}, cities: {}, lastUpdate: null };
+let analytics = { pages: {}, total: 0, dates: {}, referrers: {}, countries: {}, cities: {} };
 let hasData = false;
 
 try {
-  try {
-    const { getStore } = await import('@netlify/blobs');
-    const store = getStore('surberries_analytics');
-    const stored = await store.get('data', { type: 'json' });
-    if (stored) {
-      analytics = { ...analytics, ...stored };
-      hasData = true;
-    }
-  } catch (e) {
-    try {
-      const fs = await import('fs/promises');
-      const path = await import('path');
-      const file = path.join(process.cwd(), 'public', 'data', 'analytics.json');
-      const content = await fs.readFile(file, 'utf-8');
-      analytics = JSON.parse(content);
-      hasData = true;
-    } catch (e2) {
-      console.log('Sin datos aún');
-    }
+  const store = getStore({ name: 'surberries_analytics', consistency: 'strong' });
+  const stored = await store.get('data', { type: 'json' });
+  
+  if (stored) {
+    analytics = stored;
+    hasData = true;
   }
-  analytics.pages = analytics.pages || {};
-  analytics.dates = analytics.dates || {};
-  analytics.referrers = analytics.referrers || {};
-  analytics.countries = analytics.countries || {};
-  analytics.cities = analytics.cities || {};
 } catch (e) {
-  console.log('Error leyendo analytics:', e.message);
+  console.log(' Sin datos aún o error de lectura');
 }
 
+const topPages = Object.entries(analytics.pages || {}).sort((a, b) => b[1] - a[1]).slice(0, 10);
+const topCountries = Object.entries(analytics.countries || {}).sort((a, b) => b[1] - a[1]).slice(0, 10);
+const topCities = Object.entries(analytics.cities || {}).sort((a, b) => b[1] - a[1]).slice(0, 10);
+const last7Days = Object.entries(analytics.dates || {}).sort((a, b) => b[0].localeCompare(a[0])).slice(0, 7).reverse();
+const topReferrers = Object.entries(analytics.referrers || {}).sort((a, b) => b[1] - a[1]).slice(0, 5);
 const totalVisits = analytics.total || 0;
-const topPages = Object.entries(analytics.pages).sort((a, b) => b[1] - a[1]).slice(0, 10);
-const topCountries = Object.entries(analytics.countries).sort((a, b) => b[1] - a[1]).slice(0, 10);
-const topCities = Object.entries(analytics.cities).sort((a, b) => b[1] - a[1]).slice(0, 10);
-const last7Days = Object.entries(analytics.dates).sort((a, b) => b[0].localeCompare(a[0])).slice(0, 7).reverse();
-const topReferrers = Object.entries(analytics.referrers).sort((a, b) => b[1] - a[1]).slice(0, 5);
 ---
 
 <Layout title="Analytics" description="Dashboard privado" lang="es">
   <main class="admin-analytics">
     <div class="container-custom">
       <div class="admin-header">
-        <h1>📊 Analytics Dashboard</h1>
+        <h1> Analytics Dashboard</h1>
         <p>Exportadora Surberries - Estadísticas Privadas</p>
         {analytics.lastUpdate && (
           <p style="font-size: 0.875rem; opacity: 0.8; margin-top: 0.5rem;">
@@ -79,13 +64,13 @@ const topReferrers = Object.entries(analytics.referrers).sort((a, b) => b[1] - a
                 <div class="stat-label">Total Visitas</div>
               </div>
               <div class="stat-card">
-                <div class="stat-icon">🌍</div>
-                <div class="stat-value">{Object.keys(analytics.countries).length}</div>
+                <div class="stat-icon"></div>
+                <div class="stat-value">{Object.keys(analytics.countries || {}).length}</div>
                 <div class="stat-label">Países</div>
               </div>
               <div class="stat-card">
                 <div class="stat-icon">📅</div>
-                <div class="stat-value">{Object.keys(analytics.dates).length}</div>
+                <div class="stat-value">{Object.keys(analytics.dates || {}).length}</div>
                 <div class="stat-label">Días Activos</div>
               </div>
             </div>
@@ -170,21 +155,24 @@ const topReferrers = Object.entries(analytics.referrers).sort((a, b) => b[1] - a
 
             {topReferrers.length > 0 && (
               <div class="section">
-                <h2>🔗 Fuentes de Tráfico</h2>
+                <h2> Fuentes de Tráfico</h2>
                 <div class="table-container">
                   <table class="data-table">
                     <thead><tr><th>Fuente</th><th>Visitas</th></tr></thead>
                     <tbody>
                       {topReferrers.map(([source, visits]) => (
-                        <tr>
-                          <td><code>{source}</code></td>
-                          <td><strong>{visits}</strong></td>
-                        </tr>
+                        <tr><td><code>{source}</code></td><td><strong>{visits}</strong></td></tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
               </div>
+            )}
+
+            {analytics.lastUpdate && (
+              <p style="text-align:center;color:#666;margin-top:2rem;">
+                Última actualización: {new Date(analytics.lastUpdate).toLocaleString('es-CL')}
+              </p>
             )}
           </>
         ) : (
@@ -206,7 +194,7 @@ const topReferrers = Object.entries(analytics.referrers).sort((a, b) => b[1] - a
 
   <script>
     const ADMIN_PASSWORD = "SurBerries2026!";
-
+    
     window.logout = function() {
       sessionStorage.removeItem('analyticsAuth');
       location.reload();

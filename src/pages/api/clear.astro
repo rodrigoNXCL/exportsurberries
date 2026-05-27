@@ -1,39 +1,30 @@
 ---
 export const prerender = false;
 
+import { getStore } from '@netlify/blobs';
+
+// ✅ CLAVE DEFINIDA (Fallback si no está en ENV)
+const ADMIN_PASSWORD = import.meta.env.ADMIN_PASSWORD || "SurBerries2026!";
+
 export async function POST({ request }) {
   try {
-    const empty = { 
-      pages: {}, 
-      total: 0, 
-      dates: {}, 
-      referrers: {}, 
-      countries: {},
-      cities: {},
-      lastUpdate: new Date().toISOString()
-    };
-
-    try {
-      const { getStore } = await import('@netlify/blobs');
-      const store = getStore('surberries_analytics');
-      await store.setJSON('data', empty);
-    } catch (e) {
-      try {
-        const fs = await import('fs');
-        const path = await import('path');
-        const file = path.join(process.cwd(), 'public', 'data', 'analytics.json');
-        fs.writeFileSync(file, JSON.stringify(empty, null, 2), 'utf-8');
-      } catch (e2) {
-        console.error('⚠️ No se pudo limpiar:', e2.message);
-      }
+    // Validación básica de seguridad (opcional pero recomendada)
+    const authHeader = request.headers.get('Authorization');
+    const token = authHeader?.replace('Bearer ', '');
+    
+    if (token && token !== ADMIN_PASSWORD) {
+       return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
     }
+
+    const store = getStore({ name: 'surberries_analytics', consistency: 'strong' });
+    await store.delete('data');
 
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     });
   } catch (error) {
-    console.error('❌ ERROR clearing:', error);
+    console.error('❌ ERROR CLEAR:', error);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
