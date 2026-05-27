@@ -8,16 +8,29 @@ export async function POST({ request }) {
     const data = await request.json();
     const { pathname, country = 'Desconocido', countryCode = 'XX', city = 'Desconocida' } = data;
 
-    // ✅ USAR NETLIFY BLOBS (Persistente en Producción)
+    console.log('📊 Track recibido:', { pathname, country });
+
+    // ✅ USAR NETLIFY BLOBS
     const store = getStore({ name: 'surberries_analytics', consistency: 'strong' });
     
-    let analytics = { pages: {}, total: 0, dates: {}, referrers: {}, countries: {}, cities: {}, lastUpdate: null };
+    let analytics = { 
+      pages: {}, 
+      total: 0, 
+      dates: {}, 
+      referrers: {}, 
+      countries: {}, 
+      cities: {}, 
+      lastUpdate: null 
+    };
 
     try {
       const stored = await store.get('data', { type: 'json' });
-      if (stored) analytics = stored;
+      if (stored) {
+        analytics = stored;
+        console.log(' Datos cargados:', analytics.total, 'visitas');
+      }
     } catch (e) {
-      console.log(' Nuevo almacén o error de lectura');
+      console.log('📄 Nuevo almacén o error de lectura');
     }
 
     const today = new Date().toISOString().split('T')[0];
@@ -41,17 +54,33 @@ export async function POST({ request }) {
 
     // Guardar en Blobs
     await store.set('data', JSON.stringify(analytics));
+    console.log('✅ Datos guardados. Total:', analytics.total);
 
-    return new Response(JSON.stringify({ success: true, total: analytics.total }), {
+    // ✅ RESPUESTA JSON VÁLIDA
+    return new Response(JSON.stringify({ 
+      success: true, 
+      total: analytics.total,
+      message: 'Track registrado'
+    }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      }
     });
 
   } catch (error) {
-    console.error(' ERROR TRACK:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    console.error('❌ ERROR TRACK:', error);
+    // ✅ RESPUESTA DE ERROR JSON VÁLIDA
+    return new Response(JSON.stringify({ 
+      error: error.message,
+      success: false 
+    }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      }
     });
   }
 }
