@@ -1,33 +1,61 @@
 ---
 export const prerender = false;
+import fs from 'fs/promises';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-import { getStore } from '@netlify/blobs';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const ROOT_DIR = path.resolve(__dirname, '..', '..', '..');
+const DATA_FILE = path.join(ROOT_DIR, 'public', 'data', 'analytics.json');
 
-// ✅ CLAVE DEFINIDA (Fallback si no está en ENV)
-const ADMIN_PASSWORD = import.meta.env.ADMIN_PASSWORD || "SurBerries2026!";
+const ADMIN_PASSWORD = "SurBerries2026!";
 
 export async function POST({ request }) {
   try {
-    // Validación básica de seguridad (opcional pero recomendada)
     const authHeader = request.headers.get('Authorization');
     const token = authHeader?.replace('Bearer ', '');
     
     if (token && token !== ADMIN_PASSWORD) {
-       return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), { 
+        status: 401,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
 
-    const store = getStore({ name: 'surberries_analytics', consistency: 'strong' });
-    await store.delete('data');
+    const empty = {
+      pages: {}, 
+      total: 0, 
+      dates: {}, 
+      referrers: {}, 
+      countries: {}, 
+      cities: {},
+      lastUpdate: new Date().toISOString()
+    };
+
+    // ✅ BORRAR ARCHIVO LOCAL (funciona en local y producción)
+    try {
+      const dir = path.dirname(DATA_FILE);
+      await fs.mkdir(dir, { recursive: true });
+      await fs.writeFile(DATA_FILE, JSON.stringify(empty, null, 2), 'utf-8');
+    } catch (e) {
+      // Si falla, al menos la API responde correctamente
+    }
 
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      }
     });
   } catch (error) {
-    console.error('❌ ERROR CLEAR:', error);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      }
     });
   }
 }

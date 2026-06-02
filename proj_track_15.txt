@@ -1,0 +1,333 @@
+=== src/pages/admin/analytics.astro ===
+---
+import Layout from '../../layouts/Layout.astro';
+export const prerender = false;
+
+const ADMIN_PASSWORD = "SurBerries2026!";
+---
+
+<Layout title="Analytics Dashboard" description="Dashboard privado">
+  <main class="analytics-dashboard">
+    <div class="container">
+      <h1>📊 Analytics Dashboard</h1>
+      <p>Exportadora Surberries - Estadísticas en Tiempo Real</p>
+      
+      <div id="loginScreen" class="login-box">
+        <div class="login-icon">🔐</div>
+        <h2>Acceso Restringido</h2>
+        <p>Ingresa la contraseña para ver las estadísticas</p>
+        <div class="password-input-group">
+          <input type="password" id="passwordInput" placeholder="Ingresa la contraseña..." class="password-input" />
+          <button onclick="checkPassword()" class="btn btn-primary">Acceder</button>
+        </div>
+        <a href="/" class="btn btn-outline">← Volver al Sitio</a>
+      </div>
+
+      <div id="dashboard" style="display: none;">
+        <div id="loading" class="loading">Cargando datos de Google Analytics...</div>
+        
+        <div id="content" style="display: none;">
+          <!-- Métricas Principales -->
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <h3>👥 Usuarios Activos</h3>
+              <div id="activeUsers" class="metric-value">-</div>
+            </div>
+            <div class="metric-card">
+              <h3>👁️ Vistas de Página</h3>
+              <div id="pageViews" class="metric-value">-</div>
+            </div>
+            <div class="metric-card">
+              <h3>🔄 Sesiones</h3>
+              <div id="sessions" class="metric-value">-</div>
+            </div>
+            <div class="metric-card">
+              <h3>⏱️ Duración Promedio</h3>
+              <div id="avgDuration" class="metric-value">-</div>
+            </div>
+          </div>
+
+          <!-- Top Páginas -->
+          <div class="section">
+            <h2>🔝 Top 10 Páginas Más Visitadas</h2>
+            <div id="topPages" class="loading">Cargando...</div>
+          </div>
+
+          <!-- Top Países -->
+          <div class="section">
+            <h2>🌍 Visitas por País</h2>
+            <div id="topCountries" class="loading">Cargando...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const ADMIN_PASSWORD = "SurBerries2026!";
+
+    // Verificar autenticación
+    const storedAuth = sessionStorage.getItem('surberries_auth');
+    if (storedAuth) {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      fetchAnalyticsData();
+    }
+
+    window.checkPassword = function() {
+      const input = document.getElementById('passwordInput').value;
+      if (input === ADMIN_PASSWORD) {
+        sessionStorage.setItem('surberries_auth', 'true');
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        fetchAnalyticsData();
+      } else {
+        alert('❌ Contraseña incorrecta');
+      }
+    };
+
+    async function fetchAnalyticsData() {
+      try {
+        const response = await fetch('/api/analytics-data');
+        const result = await response.json();
+        
+        if (!result.success) throw new Error(result.error);
+
+        updateMetrics(result.data);
+        
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('loading').innerHTML = `Error: ${error.message}`;
+      }
+    }
+
+    function updateMetrics(data) {
+      // Actualizar métricas principales
+      if (data.main.rows && data.main.rows.length > 0) {
+        const lastRow = data.main.rows[data.main.rows.length - 1].metricValues;
+        document.getElementById('activeUsers').textContent = formatNumber(lastRow[0].value);
+        document.getElementById('pageViews').textContent = formatNumber(lastRow[1].value);
+        document.getElementById('sessions').textContent = formatNumber(lastRow[2].value);
+        document.getElementById('avgDuration').textContent = formatDuration(lastRow[3].value);
+      }
+
+      // Top Páginas
+      if (data.pages.rows) {
+        const pagesHtml = data.pages.rows.map(row => {
+          const views = row.metricValues[0].value;
+          return `<div class="data-row"><span>${row.dimensionValues[0].value}</span><span>${formatNumber(views)} vistas</span></div>`;
+        }).join('');
+        document.getElementById('topPages').innerHTML = pagesHtml;
+      }
+
+      // Top Países
+      if (data.countries.rows) {
+        const countriesHtml = data.countries.rows.map(row => {
+          const users = row.metricValues[0].value;
+          return `<div class="data-row"><span>${row.dimensionValues[0].value}</span><span>${formatNumber(users)} usuarios</span></div>`;
+        }).join('');
+        document.getElementById('topCountries').innerHTML = countriesHtml;
+      }
+    }
+
+    function formatNumber(num) {
+      return new Intl.NumberFormat('es-CL').format(num);
+    }
+
+    function formatDuration(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}m ${secs}s`;
+    }
+
+    document.getElementById('passwordInput')?.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') window.checkPassword();
+    });
+  </script>
+
+  <style>
+    .analytics-dashboard { padding: 6rem 0 4rem; min-height: 100vh; background: var(--color-off-white); }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+    h1 { font-size: 2.5rem; margin-bottom: 0.5rem; color: var(--color-gray-900); }
+    .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin: 3rem 0; }
+    .metric-card { background: white; padding: 2rem; border-radius: var(--radius-xl); box-shadow: var(--shadow-md); text-align: center; }
+    .metric-value { font-size: 2.5rem; font-weight: 800; color: var(--color-primary); margin-top: 1rem; }
+    .section { background: white; padding: 2rem; border-radius: var(--radius-xl); box-shadow: var(--shadow-md); margin-bottom: 2rem; }
+    .data-row { display: flex; justify-content: space-between; padding: 1rem; border-bottom: 1px solid var(--color-gray-200); }
+    .data-row:last-child { border-bottom: none; }
+    .login-box { max-width: 500px; margin: 4rem auto; background: white; padding: 3rem; border-radius: var(--radius-xl); box-shadow: var(--shadow-xl); text-align: center; }
+    .login-icon { font-size: 4rem; margin-bottom: 1rem; }
+    .password-input-group { display: flex; gap: 1rem; margin: 2rem 0; justify-content: center; }
+    .password-input { flex: 1; max-width: 300px; padding: 1rem; border: 2px solid var(--color-gray-200); border-radius: var(--radius-md); font-size: 1rem; text-align: center; }
+    .btn-primary { background: var(--color-primary); color: white; padding: 1rem 2rem; border: none; border-radius: var(--radius-md); cursor: pointer; }
+    .btn-outline { display: inline-block; padding: 1rem 2rem; border: 2px solid var(--color-primary); color: var(--color-primary); border-radius: var(--radius-md); text-decoration: none; }
+    .loading { text-align: center; padding: 2rem; color: var(--color-gray-600); }
+  </style>
+</Layout>
+=== src/pages/api/analytics-data.astro ===
+---
+export const prerender = false;
+import { google } from 'googleapis';
+import 'dotenv/config';
+
+const GA_PROPERTY_ID = import.meta.env.GA_PROPERTY_ID || '396534500';
+
+export async function GET() {
+  try {
+    // Crear autenticación OAuth2
+    const auth = new google.auth.GoogleAuth({
+      credentials: {
+        client_id: import.meta.env.GA_CLIENT_ID,
+        client_secret: import.meta.env.GA_CLIENT_SECRET,
+      },
+      scopes: ['https://www.googleapis.com/auth/analytics.readonly'],
+    });
+
+    const analyticsData = google.analyticsdata({
+      version: 'v1beta',
+      auth,
+    });
+
+    // Obtener métricas principales (últimos 7 días)
+    const response = await analyticsData.properties.runReport({
+      property: `properties/${GA_PROPERTY_ID}`,
+      dateRanges: [{ startDate: '7daysAgo', endDate: 'today' }],
+      dimensions: [{ name: 'date' }],
+      metrics: [
+        { name: 'activeUsers' },
+        { name: 'screenPageViews' },
+        { name: 'sessions' },
+        { name: 'averageSessionDuration' },
+      ],
+    });
+
+    // Obtener top páginas
+    const pagesResponse = await analyticsData.properties.runReport({
+      property: `properties/${GA_PROPERTY_ID}`,
+      dateRanges: [{ startDate: '7daysAgo', endDate: 'today' }],
+      dimensions: [{ name: 'pageTitle' }, { name: 'pagePath' }],
+      metrics: [{ name: 'screenPageViews' }],
+      orderBy: [{ metric: { metricName: 'screenPageViews' }, desc: true }],
+      limit: 10,
+    });
+
+    // Obtener top países
+    const countriesResponse = await analyticsData.properties.runReport({
+      property: `properties/${GA_PROPERTY_ID}`,
+      dateRanges: [{ startDate: '7daysAgo', endDate: 'today' }],
+      dimensions: [{ name: 'country' }],
+      metrics: [{ name: 'activeUsers' }],
+      orderBy: [{ metric: { metricName: 'activeUsers' }, desc: true }],
+      limit: 10,
+    });
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        data: {
+          main: response,
+          pages: pagesResponse,
+          countries: countriesResponse,
+        },
+      }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
+  } catch (error) {
+    console.error('Error fetching GA4 data:', error);
+    return new Response(
+      JSON.stringify({ error: error.message, success: false }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+}
+---
+=== src/layouts/Layout.astro ===
+---
+interface Props {
+  title: string;
+  description?: string;
+  lang?: 'es' | 'en';
+}
+
+const { title, description = 'Exportadora líder en frutillas, frambuesas y arándanos congelados IQF. Calidad chilena para el mundo.', lang = 'es' } = Astro.props;
+
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppFloat from '../components/WhatsAppFloat.astro';
+
+// ✅ Determinar Measurement ID según dominio
+const hostname = Astro.url.hostname;
+const gaId = hostname.includes('.cl') ? 'G-RKYPY1R2FS' : 'G-SSR0N7BJY9';
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title} | Exportadora Surberries</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content="frutillas congeladas, arándanos IQF, frambuesas exportación, espárragos congelados, frutas congeladas Chile, exportadora de berries" />
+    <meta name="author" content="Exportadora Surberries" />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href={`https://${Astro.url.hostname}${Astro.url.pathname}`} />
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={`https://${Astro.url.hostname}${Astro.url.pathname}`} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={`https://${Astro.url.hostname}/images/og-image.jpg`} />
+    <meta property="og:locale" content={lang === 'es' ? 'es_CL' : 'en_US'} />
+    <meta property="og:site_name" content="Exportadora Surberries" />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={`https://${Astro.url.hostname}${Astro.url.pathname}`} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={`https://${Astro.url.hostname}/images/og-image.jpg`} />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+    
+    <!-- ✅ GOOGLE ANALYTICS 4 - Script Oficial -->
+    <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
+    <script is:inline set:html={`
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '${gaId}', {
+        page_path: window.location.pathname,
+        send_page_view: true
+      });
+    `}></script>
+  </head>
+  
+  <body>
+    <Header />
+    <slot />
+    <Footer />
+    <WhatsAppFloat />
+  </body>
+</html>
+
+<style is:global>
+  @import '../styles/global.css';
+</style>
+=== .env ===
+GA_CLIENT_ID=365104062616-21l08t3jnfoh67mu30dond05ntsl1c6a.apps.googleusercontent.com
+GA_CLIENT_SECRET=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
+GA_PROPERTY_ID=396534500
+GA_EMAIL=exportsurberries.cl@gmail.com

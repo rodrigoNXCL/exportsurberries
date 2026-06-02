@@ -2,47 +2,81 @@
 export const prerender = false;
 
 import { getStore } from '@netlify/blobs';
+import fs from 'fs/promises';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// Calcular ruta absoluta
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const ROOT_DIR = path.resolve(__dirname, '..', '..', '..');
+const DATA_FILE = path.join(ROOT_DIR, 'public', 'data', 'analytics.json');
 
 export async function POST({ request }) {
+  console.log('🚀 [TRACK API] === INICIANDO PETICIÓN ===');
+  console.log('[TRACK API] Headers:', Object.fromEntries(request.headers));
+  
   try {
     const data = await request.json();
     const { pathname, country = 'Desconocido', countryCode = 'XX', city = 'Desconocida' } = data;
-
-    console.log('📊 Track recibido:', { pathname, country });
-
-    // ✅ USAR NETLIFY BLOBS
-    const store = getStore({ name: 'surberries_analytics', consistency: 'strong' });
     
-    let analytics = { 
-      pages: {}, 
-      total: 0, 
-      dates: {}, 
-      referrers: {}, 
-      countries: {}, 
-      cities: {}, 
-      lastUpdate: null 
+    console.log(`📊 [TRACK API] Datos recibidos:`);
+    console.log('  - Pathname:', pathname);
+    console.log('  - País:', country);
+    console.log('  - Ciudad:', city);
+    
+    // Leer datos existentes
+    let analytics = {
+      pages: {},
+      total: 0,
+      dates: {},
+      referrers: {},
+      countries: {},
+      cities: {},
+      lastUpdate: null
     };
-
+    
+    let usingBlobs = false;
+    
+    // Intentar Netlify Blobs primero
     try {
+      console.log('💾 [TRACK API] Intentando leer de Netlify Blobs...');
+      const store = getStore({ name: 'surberries_analytics', consistency: 'strong' });
       const stored = await store.get('data', { type: 'json' });
+      
       if (stored) {
         analytics = stored;
-        console.log(' Datos cargados:', analytics.total, 'visitas');
+        usingBlobs = true;
+        console.log('✅ [TRACK API] Datos cargados desde Blobs. Total actual:', analytics.total);
+      } else {
+        console.log('⚠️ [TRACK API] Blobs está vacío');
       }
     } catch (e) {
-      console.log('📄 Nuevo almacén o error de lectura');
+      console.log('❌ [TRACK API] Error leyendo Blobs:', e.message);
+      console.log('📂 [TRACK API] Usando archivo local como fallback');
     }
-
+    
+    // Fallback a archivo local
+    if (!usingBlobs) {
+      try {
+        console.log('📂 [TRACK API] Leyendo archivo local:', DATA_FILE);
+        const content = await fs.readFile(DATA_FILE, 'utf-8');
+        analytics = JSON.parse(content);
+        console.log('✅ [TRACK API] Datos cargados desde archivo. Total:', analytics.total);
+      } catch (e) {
+        console.log('📄 [TRACK API] Archivo no existe, se creará nuevo');
+      }
+    }
+    
+    // Actualizar contadores
     const today = new Date().toISOString().split('T')[0];
     const now = new Date().toISOString();
-
-    // Actualizar contadores
+    
     analytics.total = (analytics.total || 0) + 1;
     analytics.pages[pathname] = (analytics.pages[pathname] || 0) + 1;
     analytics.dates[today] = (analytics.dates[today] || 0) + 1;
     analytics.lastUpdate = now;
-
-    // Geolocalización
+    
     if (country && country !== 'Desconocido') {
       analytics.countries = analytics.countries || {};
       analytics.countries[country] = (analytics.countries[country] || 0) + 1;
@@ -51,37 +85,83 @@ export async function POST({ request }) {
       analytics.cities = analytics.cities || {};
       analytics.cities[cityKey] = (analytics.cities[cityKey] || 0) + 1;
     }
-
-    // Guardar en Blobs
-    await store.set('data', JSON.stringify(analytics));
-    console.log('✅ Datos guardados. Total:', analytics.total);
-
-    // ✅ RESPUESTA JSON VÁLIDA
-    return new Response(JSON.stringify({ 
-      success: true, 
-      total: analytics.total,
-      message: 'Track registrado'
-    }), {
-      status: 200,
-      headers: { 
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
+    
+    // Guardar datos
+    try {
+      if (usingBlobs) {
+        const store = getStore({ name: 'surberries_analytics', consistency: 'strong' });
+        await store.set('data', JSON.stringify(analytics));
+        console.log('💾 [TRACK API] Guardado en Blobs. Nuevo total:', analytics.total);
+      } else {
+        // Asegurar que el directorio existe
+        const dir = path.dirname(DATA_FILE);
+        try {
+          await fs.mkdir(dir, { recursive: true });
+          console.log('📁 [TRACK API] Directorio creado:', dir);
+        } catch (e) {
+          // Ignorar si ya existe
+        }
+        
+        await fs.writeFile(DATA_FILE, JSON.stringify(analytics, null, 2), 'utf-8');
+        console.log('💾 [TRACK API] Guardado en archivo local. Nuevo total:', analytics.total);
+        console.log('📍 [TRACK API] Ruta del archivo:', DATA_FILE);
       }
-    });
-
+    } catch (e) {
+      console.error('❌ [TRACK API] ERROR AL GUARDAR:', e.message);
+      console.error('Stack:', e.stack);
+      throw e;
+    }
+    
+    console.log('✅ [TRACK API] === PETICIÓN COMPLETADA ===');
+    
+    return new Response(
+      JSON.stringify({ 
+        success: true, 
+        total: analytics.total,
+        message: 'Track registrado correctamente'
+      }), 
+      {
+        status: 200,
+        headers: { 
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        }
+      }
+    );
+    
   } catch (error) {
-    console.error('❌ ERROR TRACK:', error);
-    // ✅ RESPUESTA DE ERROR JSON VÁLIDA
-    return new Response(JSON.stringify({ 
-      error: error.message,
-      success: false 
-    }), {
-      status: 500,
-      headers: { 
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
+    console.error('💥 [TRACK API] === ERROR CRÍTICO ===');
+    console.error('Error:', error);
+    console.error('Message:', error.message);
+    console.error('Stack:', error.stack);
+    
+    return new Response(
+      JSON.stringify({ 
+        error: error.message,
+        success: false 
+      }), 
+      {
+        status: 500,
+        headers: { 
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        }
       }
-    });
+    );
   }
+}
+
+// Manejar OPTIONS para CORS
+export async function OPTIONS() {
+  console.log('🔄 [TRACK API] Request OPTIONS recibida');
+  
+  return new Response(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    }
+  });
 }
 ---

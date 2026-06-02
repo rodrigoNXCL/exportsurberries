@@ -1,192 +1,80 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getStore } from '@netlify/blobs';
-
 export const prerender = false;
 
-// ✅ CLAVE CORRECTA: SurBerries2026! (Coincide con Netlify Env)
-const ADMIN_PASSWORD = import.meta.env.ADMIN_PASSWORD || "SurBerries2026!";
-
-let analytics = { pages: {}, total: 0, dates: {}, referrers: {}, countries: {}, cities: {} };
-let hasData = false;
-
-try {
-  const store = getStore({ name: 'surberries_analytics', consistency: 'strong' });
-  const stored = await store.get('data', { type: 'json' });
-  
-  if (stored) {
-    analytics = stored;
-    hasData = true;
-  }
-} catch (e) {
-  console.log(' Sin datos aún o error de lectura');
-}
-
-const topPages = Object.entries(analytics.pages || {}).sort((a, b) => b[1] - a[1]).slice(0, 10);
-const topCountries = Object.entries(analytics.countries || {}).sort((a, b) => b[1] - a[1]).slice(0, 10);
-const topCities = Object.entries(analytics.cities || {}).sort((a, b) => b[1] - a[1]).slice(0, 10);
-const last7Days = Object.entries(analytics.dates || {}).sort((a, b) => b[0].localeCompare(a[0])).slice(0, 7).reverse();
-const topReferrers = Object.entries(analytics.referrers || {}).sort((a, b) => b[1] - a[1]).slice(0, 5);
-const totalVisits = analytics.total || 0;
+const ADMIN_PASSWORD = "SurBerries2026!";
+const GA_REPORT_URL = "https://analytics.google.com/analytics/web/?#/a396534500p539918069/reports/reportinghub?params=_u..nav%3Dmaui%26_u.dateOption%3Dtoday";
 ---
 
-<Layout title="Analytics" description="Dashboard privado" lang="es">
-  <main class="admin-analytics">
-    <div class="container-custom">
-      <div class="admin-header">
-        <h1> Analytics Dashboard</h1>
-        <p>Exportadora Surberries - Estadísticas Privadas</p>
-        {analytics.lastUpdate && (
-          <p style="font-size: 0.875rem; opacity: 0.8; margin-top: 0.5rem;">
-            Última actualización: {new Date(analytics.lastUpdate).toLocaleString('es-CL')}
-          </p>
-        )}
-      </div>
-
-      <div id="loginScreen" class="login-box">
-        <div class="login-icon">🔐</div>
-        <h2>Acceso Restringido</h2>
-        <p>Ingresa la contraseña para ver las estadísticas</p>
-        <div class="password-input-group">
-          <input type="password" id="passwordInput" placeholder="Ingresa la contraseña..." class="password-input" />
-          <button onclick="checkPassword()" class="btn btn-primary">Acceder</button>
+<Layout title="Analytics Dashboard" description="Estadísticas en Tiempo Real">
+  <main class="analytics-page">
+    <div class="container">
+      <!-- Login Screen -->
+      <div id="loginScreen" class="login-card">
+        <div class="login-header">
+          <span class="login-icon">📊</span>
+          <h1>Analytics Dashboard</h1>
+          <p>Exportadora Surberries</p>
         </div>
-        <a href="/" class="btn btn-outline">← Volver al Sitio</a>
+        
+        <form id="loginForm" class="login-form">
+          <label for="password">Contraseña de acceso</label>
+          <input type="password" id="password" name="password" placeholder="Ingresa la contraseña" required />
+          <button type="submit" class="btn-primary">Acceder al Reporte</button>
+        </form>
+        
+        <p class="login-hint">🔐 Acceso restringido • Solo personal autorizado</p>
       </div>
 
-      <div id="dashboard" style="display: none;">
-        {hasData ? (
-          <>
-            <div class="stats-grid">
-              <div class="stat-card">
-                <div class="stat-icon">👁️</div>
-                <div class="stat-value">{totalVisits}</div>
-                <div class="stat-label">Total Visitas</div>
-              </div>
-              <div class="stat-card">
-                <div class="stat-icon"></div>
-                <div class="stat-value">{Object.keys(analytics.countries || {}).length}</div>
-                <div class="stat-label">Países</div>
-              </div>
-              <div class="stat-card">
-                <div class="stat-icon">📅</div>
-                <div class="stat-value">{Object.keys(analytics.dates || {}).length}</div>
-                <div class="stat-label">Días Activos</div>
-              </div>
-            </div>
+      <!-- Dashboard Content (oculto hasta login) -->
+      <div id="dashboard" class="dashboard-content" style="display: none;">
+        <div class="dashboard-header">
+          <h1>📈 Reporte de Google Analytics</h1>
+          <p>Propiedad: SurBerries (ID: 396534500)</p>
+          <button id="openReport" class="btn-report">
+            Abrir Reporte en Google Analytics →
+          </button>
+        </div>
 
-            {topCountries.length > 0 && (
-              <div class="section">
-                <h2>🌍 Top Países (lo que pidió el cliente)</h2>
-                <div class="table-container">
-                  <table class="data-table">
-                    <thead><tr><th>País</th><th>Visitas</th><th>%</th></tr></thead>
-                    <tbody>
-                      {topCountries.map(([country, visits]) => (
-                        <tr>
-                          <td><strong>{country}</strong></td>
-                          <td><strong>{visits}</strong></td>
-                          <td>{totalVisits > 0 ? ((visits / totalVisits) * 100).toFixed(1) : 0}%</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            )}
-
-            {topCities.length > 0 && (
-              <div class="section">
-                <h2>🏙️ Top Ciudades</h2>
-                <div class="table-container">
-                  <table class="data-table">
-                    <thead><tr><th>Ciudad, País</th><th>Visitas</th></tr></thead>
-                    <tbody>
-                      {topCities.map(([city, visits]) => (
-                        <tr>
-                          <td><strong>{city}</strong></td>
-                          <td><strong>{visits}</strong></td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            )}
-
-            <div class="section">
-              <h2>🔝 Top 10 Páginas Más Visitadas</h2>
-              <div class="table-container">
-                <table class="data-table">
-                  <thead><tr><th>Página</th><th>Visitas</th><th>%</th></tr></thead>
-                  <tbody>
-                    {topPages.map(([page, views]) => (
-                      <tr>
-                        <td><code>{page}</code></td>
-                        <td><strong>{views}</strong></td>
-                        <td>{totalVisits > 0 ? ((views / totalVisits) * 100).toFixed(1) : 0}%</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {last7Days.length > 0 && (
-              <div class="section">
-                <h2>📈 Tráfico Últimos 7 Días</h2>
-                <div class="bar-chart">
-                  {last7Days.map(([date, views]) => {
-                    const maxViews = Math.max(...last7Days.map(([,v]) => v));
-                    const width = maxViews > 0 ? (views / maxViews) * 100 : 0;
-                    return (
-                      <div class="bar-item">
-                        <div class="bar-label">{date}</div>
-                        <div class="bar-wrapper">
-                          <div class="bar-fill" style={`width: ${width}%`}></div>
-                        </div>
-                        <div class="bar-value">{views}</div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
-            {topReferrers.length > 0 && (
-              <div class="section">
-                <h2> Fuentes de Tráfico</h2>
-                <div class="table-container">
-                  <table class="data-table">
-                    <thead><tr><th>Fuente</th><th>Visitas</th></tr></thead>
-                    <tbody>
-                      {topReferrers.map(([source, visits]) => (
-                        <tr><td><code>{source}</code></td><td><strong>{visits}</strong></td></tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            )}
-
-            {analytics.lastUpdate && (
-              <p style="text-align:center;color:#666;margin-top:2rem;">
-                Última actualización: {new Date(analytics.lastUpdate).toLocaleString('es-CL')}
-              </p>
-            )}
-          </>
-        ) : (
-          <div class="alert alert-warning">
-            📊 No hay datos aún. Visita algunas páginas del sitio primero.
+        <div class="report-preview">
+          <div class="preview-card">
+            <h3>🔴 Tiempo Real</h3>
+            <p>Usuarios activos en este momento, páginas vistas, eventos</p>
+            <span class="badge badge-red">Inmediato</span>
           </div>
-        )}
+          
+          <div class="preview-card">
+            <h3>🌍 Ubicación</h3>
+            <p>Países y ciudades desde donde visitan tu sitio</p>
+            <span class="badge badge-blue">Geo-data</span>
+          </div>
+          
+          <div class="preview-card">
+            <h3>📄 Páginas</h3>
+            <p>Contenido más visitado y engagement por página</p>
+            <span class="badge badge-green">Top content</span>
+          </div>
+          
+          <div class="preview-card">
+            <h3>🔄 Adquisición</h3>
+            <p>Fuentes de tráfico: Google, redes sociales, directo</p>
+            <span class="badge badge-purple">Traffic sources</span>
+          </div>
+        </div>
 
-        <div class="admin-footer">
-          <button onclick="logout()" class="btn btn-outline">Cerrar Sesión</button>
-          <button
-            onclick="if(confirm('¿Borrar todos los datos?')) { fetch('/api/clear', {method: 'POST'}).then(() => location.reload()); }"
-            class="btn btn-secondary"
-          >🗑️ Borrar Datos</button>
+        <div class="info-box">
+          <h4>ℹ️ Información importante</h4>
+          <ul>
+            <li>El reporte se abrirá en una nueva pestaña</li>
+            <li>Debes iniciar sesión con: <code>exportsurberries.cl@gmail.com</code></li>
+            <li>Los datos en tiempo real se actualizan automáticamente</li>
+            <li>Los reportes históricos tienen un delay de 24-48 horas</li>
+          </ul>
+        </div>
+
+        <div class="actions">
+          <a href="/" class="btn-outline">← Volver al sitio</a>
+          <button id="logout" class="btn-text">Cerrar sesión</button>
         </div>
       </div>
     </div>
@@ -194,72 +82,202 @@ const totalVisits = analytics.total || 0;
 
   <script>
     const ADMIN_PASSWORD = "SurBerries2026!";
+    const GA_REPORT_URL = "https://analytics.google.com/analytics/web/?#/a396534500p539918069/reports/reportinghub?params=_u..nav%3Dmaui%26_u.dateOption%3Dtoday";
     
-    window.logout = function() {
-      sessionStorage.removeItem('analyticsAuth');
-      location.reload();
-    };
-
-    window.checkPassword = function() {
-      const input = document.getElementById('passwordInput').value;
-      if (input === ADMIN_PASSWORD) {
+    // Verificar sesión
+    const session = sessionStorage.getItem('surberries_analytics_auth');
+    if (session === 'true') {
+      showDashboard();
+    }
+    
+    // Login form
+    document.getElementById('loginForm')?.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const password = document.getElementById('password').value;
+      
+      if (password === ADMIN_PASSWORD) {
+        sessionStorage.setItem('surberries_analytics_auth', 'true');
         showDashboard();
       } else {
         alert('❌ Contraseña incorrecta');
-        document.getElementById('passwordInput').value = '';
+        document.getElementById('password').value = '';
       }
-    };
-
+    });
+    
+    // Abrir reporte
+    document.getElementById('openReport')?.addEventListener('click', function() {
+      window.open(GA_REPORT_URL, '_blank', 'noopener,noreferrer');
+    });
+    
+    // Logout
+    document.getElementById('logout')?.addEventListener('click', function() {
+      sessionStorage.removeItem('surberries_analytics_auth');
+      location.reload();
+    });
+    
     function showDashboard() {
       document.getElementById('loginScreen').style.display = 'none';
       document.getElementById('dashboard').style.display = 'block';
-      sessionStorage.setItem('analyticsAuth', 'true');
     }
-
-    if (sessionStorage.getItem('analyticsAuth') === 'true') {
-      showDashboard();
-    }
-
-    document.getElementById('passwordInput')?.addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') window.checkPassword();
-    });
   </script>
 
   <style>
-    .admin-analytics { padding: 8rem 0 4rem; min-height: 100vh; background: var(--color-off-white); }
-    .admin-header { text-align: center; margin-bottom: 3rem; }
-    .admin-header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; color: var(--color-gray-900); }
-    .login-box { max-width: 500px; margin: 4rem auto; background: var(--color-white); padding: 3rem; border-radius: var(--radius-xl); box-shadow: var(--shadow-xl); text-align: center; }
-    .login-icon { font-size: 4rem; margin-bottom: 1rem; }
-    .password-input-group { display: flex; gap: 1rem; margin: 2rem 0; justify-content: center; }
-    .password-input { flex: 1; max-width: 300px; padding: 1rem; border: 2px solid var(--color-gray-200); border-radius: var(--radius-md); font-size: 1rem; text-align: center; }
-    .password-input:focus { outline: none; border-color: var(--color-primary); }
-    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 3rem; }
-    .stat-card { background: var(--color-white); padding: 2rem; border-radius: var(--radius-xl); box-shadow: var(--shadow-md); text-align: center; }
-    .stat-icon { font-size: 2.5rem; margin-bottom: 1rem; }
-    .stat-value { font-size: 3rem; font-weight: 800; color: var(--color-primary); line-height: 1; margin-bottom: 0.5rem; }
-    .stat-label { font-size: 1rem; color: var(--color-gray-600); }
-    .section { background: var(--color-white); padding: 2rem; border-radius: var(--radius-xl); box-shadow: var(--shadow-md); margin-bottom: 2rem; }
-    .section h2 { font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--color-gray-900); }
-    .table-container { overflow-x: auto; }
-    .data-table { width: 100%; border-collapse: collapse; }
-    .data-table th, .data-table td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--color-gray-200); }
-    .data-table th { background: var(--color-gray-50); font-weight: 600; color: var(--color-gray-900); }
-    .data-table code { background: var(--color-gray-100); padding: 0.25rem 0.5rem; border-radius: var(--radius-md); font-family: monospace; font-size: 0.875rem; }
-    .bar-chart { display: flex; flex-direction: column; gap: 1rem; }
-    .bar-item { display: flex; align-items: center; gap: 1rem; }
-    .bar-label { min-width: 120px; font-size: 0.875rem; color: var(--color-gray-600); font-family: monospace; }
-    .bar-wrapper { flex: 1; height: 30px; background: var(--color-gray-100); border-radius: var(--radius-md); overflow: hidden; }
-    .bar-fill { height: 100%; background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); transition: width 0.5s ease; }
-    .bar-value { min-width: 50px; font-weight: 600; color: var(--color-gray-900); text-align: right; }
-    .admin-footer { display: flex; gap: 1rem; justify-content: center; margin-top: 3rem; }
-    .alert { padding: 2rem; border-radius: var(--radius-lg); text-align: center; font-size: 1.125rem; background: #fff3cd; border: 2px solid #ffc107; color: #856404; }
-    @media (max-width: 768px) {
-      .stats-grid { grid-template-columns: 1fr; }
-      .password-input-group { flex-direction: column; }
-      .password-input { max-width: 100%; }
-      .bar-item { flex-direction: column; align-items: flex-start; }
-      .bar-label { min-width: auto; }
+    .analytics-page { 
+      padding: 4rem 0; 
+      min-height: 100vh; 
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+    }
+    .container { max-width: 1000px; margin: 0 auto; padding: 0 2rem; }
+    
+    /* Login Card */
+    .login-card {
+      max-width: 450px;
+      margin: 4rem auto;
+      background: white;
+      padding: 2.5rem;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .login-header { margin-bottom: 2rem; }
+    .login-icon { font-size: 3rem; display: block; margin-bottom: 1rem; }
+    .login-header h1 { font-size: 1.5rem; margin: 0.5rem 0; color: #1a1a2e; }
+    .login-header p { color: #666; margin: 0; }
+    
+    .login-form { display: flex; flex-direction: column; gap: 1rem; }
+    .login-form label { text-align: left; font-weight: 500; color: #333; }
+    .login-form input {
+      padding: 0.875rem 1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+    .login-form input:focus { outline: none; border-color: #667eea; }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 1rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(102,126,234,0.4); }
+    
+    .login-hint { font-size: 0.875rem; color: #888; margin-top: 1.5rem; }
+    
+    /* Dashboard */
+    .dashboard-content { padding: 2rem 0; }
+    .dashboard-header {
+      text-align: center;
+      padding: 2rem;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      margin-bottom: 2rem;
+    }
+    .dashboard-header h1 { margin: 0 0 0.5rem; color: #1a1a2e; }
+    .dashboard-header p { margin: 0 0 1.5rem; color: #666; }
+    
+    .btn-report {
+      background: #dc2626;
+      color: white;
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-report:hover { background: #b91c1c; }
+    
+    /* Report Preview Grid */
+    .report-preview {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .preview-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      text-align: center;
+    }
+    .preview-card h3 { margin: 0 0 0.5rem; font-size: 1.1rem; color: #1a1a2e; }
+    .preview-card p { margin: 0 0 1rem; color: #666; font-size: 0.9rem; }
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .badge-red { background: #fee2e2; color: #dc2626; }
+    .badge-blue { background: #dbeafe; color: #2563eb; }
+    .badge-green { background: #dcfce7; color: #16a34a; }
+    .badge-purple { background: #ede9fe; color: #7c3aed; }
+    
+    /* Info Box */
+    .info-box {
+      background: #fffbeb;
+      border: 1px solid #fcd34d;
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+    }
+    .info-box h4 { margin: 0 0 1rem; color: #92400e; }
+    .info-box ul { margin: 0; padding-left: 1.5rem; color: #78350f; }
+    .info-box li { margin: 0.5rem 0; font-size: 0.9rem; }
+    .info-box code {
+      background: #f3f4f6;
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.85rem;
+    }
+    
+    /* Actions */
+    .actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      align-items: center;
+    }
+    .btn-outline {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border: 2px solid #667eea;
+      color: #667eea;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .btn-outline:hover { background: #667eea; color: white; }
+    
+    .btn-text {
+      background: none;
+      border: none;
+      color: #666;
+      cursor: pointer;
+      font-size: 0.9rem;
+      text-decoration: underline;
+    }
+    .btn-text:hover { color: #333; }
+    
+    /* Responsive */
+    @media (max-width: 640px) {
+      .analytics-page { padding: 2rem 0; }
+      .container { padding: 0 1rem; }
+      .login-card { margin: 2rem 1rem; padding: 2rem; }
+      .actions { flex-direction: column; }
     }
   </style>
 </Layout>
