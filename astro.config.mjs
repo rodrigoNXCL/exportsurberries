@@ -4,7 +4,7 @@ import netlify from '@astrojs/netlify';
 
 export default defineConfig({
   // ✅ MODO SERVER (Obligatorio para APIs)
-  output: 'server',
+  output: 'static',
   site: 'https://exportsurberries.com',
   adapter: netlify(),
   base: '/',
