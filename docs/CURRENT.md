@@ -33,7 +33,7 @@ El cliente no está cumpliendo con el pago del servicio. Se solicitó que el sit
 
 ## Archivos modificados
 
-- `netlify.toml`: todas las rutas redirigen a `/mantenimiento`, con excepciones para logo, favicon, robots, sitemap y assets.
+- `netlify.toml`: todas las rutas redirigen a `/mantenimiento`, con excepción únicamente del logo y el favicon. El resto del sitio, assets, fichas, APIs, portal y admin quedan no disponibles.
 - `src/pages/mantenimiento.astro`: página mínima con solo logo y mensaje.
 - `src/components/Header.astro`: revertido a su versión original, sin badge.
 
