@@ -6,18 +6,13 @@
   <div class="container-custom">
     <div class="header-content">
       {/* Logo */}
-      <div class="logo-group">
-        <a href="/" class="logo">
-          <img 
-            src="/images/logo-surberries.png" 
-            alt="Sur Berries - Exportadora de Frutos Congelados" 
-            class="logo-image"
-          />
-        </a>
-        <span class="maintenance-badge">
-          {Astro.url.pathname.startsWith('/en/') ? 'Administrative Maintenance' : 'Mantención Administrativa'}
-        </span>
-      </div>
+      <a href="/" class="logo">
+        <img 
+          src="/images/logo-surberries.png" 
+          alt="Sur Berries - Exportadora de Frutos Congelados" 
+          class="logo-image"
+        />
+      </a>
 
       {/* Navegación Desktop - Dinámica según idioma */}
       <nav class="nav-desktop">
@@ -175,28 +170,6 @@
     opacity: 0.85;
   }
 
-  .logo-group {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    min-width: 0;
-    flex-shrink: 0;
-  }
-
-  .maintenance-badge {
-    background: var(--color-accent);
-    color: #856404;
-    font-family: var(--font-sans);
-    font-size: 0.72rem;
-    font-weight: 700;
-    line-height: 1.1;
-    padding: 0.3rem 0.65rem;
-    border-radius: var(--radius-full);
-    white-space: nowrap;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-  }
-
   .logo-image {
     height: 90px;
     width: auto;
@@ -229,17 +202,6 @@
     }
     .header-scrolled .logo-image {
       height: 55px;
-    }
-    .logo-group {
-      gap: 0.35rem;
-    }
-    .maintenance-badge {
-      font-size: 0.55rem;
-      padding: 0.2rem 0.35rem;
-      max-width: 82px;
-      white-space: normal;
-      text-align: center;
-      line-height: 1.15;
     }
   }
 

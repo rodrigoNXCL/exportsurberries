@@ -3,54 +3,69 @@ command = "npm run build"
 publish = "dist"
 
 # ============================================
-# EXCEPCIONES - Estas van ANTES del catch-all
+# MODO MANTENCIÓN ADMINISTRATIVA
+# Todo el sitio muestra únicamente /mantenimiento
 # ============================================
 
-# 1. Admin Analytics - NO redirigir (SSR serverless)
+# Recursos necesarios para la página de mantención
 [[redirects]]
-from = "/admin/*"
-to = "/admin/:splat"
+from = "/images/*"
+to = "/images/:splat"
 status = 200
 force = true
 
-# 2. APIs - NO redirigir (SSR serverless)
 [[redirects]]
-from = "/api/*"
-to = "/api/:splat"
+from = "/_astro/*"
+to = "/_astro/:splat"
 status = 200
 force = true
 
-# 3. Portal - NO redirigir (SSR serverless)
 [[redirects]]
-from = "/portal/*"
-to = "/portal/:splat"
+from = "/favicon.ico"
+to = "/favicon.ico"
 status = 200
 force = true
 
-# 4. Fichas técnicas - NO redirigir (archivos estáticos)
 [[redirects]]
-from = "/fichas/*"
-to = "/fichas/:splat"
+from = "/favicon.svg"
+to = "/favicon.svg"
 status = 200
 force = true
 
-# 5. Idioma inglés - NO redirigir
 [[redirects]]
-from = "/en/*"
-to = "/en/:splat"
+from = "/robots.txt"
+to = "/robots.txt"
 status = 200
 force = true
 
-# ============================================
-# CATCH-ALL - Para SPA (va AL FINAL)
-# ============================================
+[[redirects]]
+from = "/sitemap.xml"
+to = "/sitemap.xml"
+status = 200
+force = true
+
+# Página de mantención (evita bucle)
+[[redirects]]
+from = "/mantenimiento"
+to = "/mantenimiento"
+status = 200
+force = true
+
+[[redirects]]
+from = "/mantenimiento/*"
+to = "/mantenimiento/:splat"
+status = 200
+force = true
+
+# Todo lo demás -> mantención
 [[redirects]]
 from = "/*"
-to = "/index.html"
+to = "/mantenimiento"
 status = 200
+force = true
 
 # ============================================
-# HEADERS - Cache y seguridad
+# HEADERS - Seguridad
 # ============================================
 [[headers]]
 for = "/*"
@@ -58,8 +73,3 @@ for = "/*"
 X-Frame-Options = "DENY"
 X-Content-Type-Options = "nosniff"
 X-XSS-Protection = "1; mode=block"
-
-[[headers]]
-for = "/fichas/*"
-[headers.values]
-Cache-Control = "public, max-age=31536000, immutable"

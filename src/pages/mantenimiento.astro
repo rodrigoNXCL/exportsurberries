@@ -1,5 +1,5 @@
 ---
-// Página de Mantenimiento - ESTÁTICA
+// Página de Mantención Administrativa - ESTÁTICA
 export const prerender = true;
 ---
 <!DOCTYPE html>
@@ -7,7 +7,8 @@ export const prerender = true;
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sitio en Mantenimiento - Exportadora Sur Berries</title>
+  <meta name="robots" content="noindex, nofollow">
+  <title>Sitio en Mantención Administrativa - Exportadora Sur Berries</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -15,56 +16,29 @@ export const prerender = true;
       background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 2rem;
       padding: 2rem;
       text-align: center;
     }
-    .container {
-      max-width: 600px;
-      background: white;
-      padding: 3rem;
-      border-radius: 15px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-    }
     .logo {
-      max-width: 180px;
+      width: 220px;
+      max-width: 70%;
       height: auto;
-      margin-bottom: 2rem;
     }
-    h1 { color: #1e3c2a; margin-bottom: 1rem; font-size: 1.75rem; }
-    p { color: #666; line-height: 1.6; margin: 1rem 0; }
-    .contact { 
-      background: #f8f9fa; 
-      padding: 1.5rem; 
-      border-radius: 10px; 
-      margin: 1.5rem 0;
-    }
-    .contact strong { color: #1e3c2a; display: block; margin-bottom: 0.5rem; }
-    .badge {
-      display: inline-block;
-      background: #ffc107;
-      color: #856404;
-      padding: 0.3rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
+    h1 {
+      color: #1e3c2a;
+      font-size: clamp(1.25rem, 4vw, 1.75rem);
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <img src="./images/logo-surberries.png" alt="Exportadora Sur Berries" class="logo" />
-    <span class="badge">⚠️ Mantenimiento Programado</span>
-    <h1>Sitio en Mantenimiento</h1>
-    <p>Este sitio se encuentra temporalmente en mantenimiento programado.</p>
-    <div class="contact">
-      <strong>Para consultas comerciales, favor contactar a:</strong>
-      <p>📧 contacto@exportsurberries.com</p>
-      <p>📱 +56 9 5900 8508</p>
-    </div>
-    <p style="color: #888; font-size: 0.85rem;">Disculpe las molestias.</p>
-  </div>
+  <img src="/images/logo-surberries.png" alt="Exportadora Sur Berries" class="logo" />
+  <h1>Sitio en Mantención Administrativa</h1>
 </body>
 </html>

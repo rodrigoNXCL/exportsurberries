@@ -14,44 +14,50 @@ Fuente de verdad del estado del proyecto. Mantener sincronizado con cada cambio 
 
 ## Contexto
 
-El cliente no está cumpliendo con el pago del servicio. Se solicitó dejar visible en el sitio un aviso de mantención administrativa, sin eliminar ni bloquear contenido, funcionalidades, portal de clientes ni APIs.
+El cliente no está cumpliendo con el pago del servicio. Se solicitó que el sitio muestre únicamente el logo y el mensaje `SITIO EN MANTENCIÓN ADMINISTRATIVA`, sin navegación, sin contenido adicional y sin etiquetas junto al logo.
 
 ---
 
-## Cambio realizado hoy
+## Estado actual
 
-- Aviso visible junto al logo del sitio en `src/components/Header.astro`.
-- Texto en español: `MANTENCIÓN ADMINISTRATIVA`.
-- Texto en inglés (rutas `/en/*`): `ADMINISTRATIVE MAINTENANCE`.
-- Implementado como badge/píldora junto al logo, bilingüe y responsive.
-- No se redirige ni se bloquea ninguna ruta.
-- No se modifican páginas, contenido, portal, APIs, analytics ni base de datos.
-- El badge aparece en todas las páginas que usan `src/layouts/Layout.astro`.
-- No aparece en `/portal/*` (layout propio) ni en `/mantenimiento` (página standalone).
-
----
-
-## Respaldo
-
-- Archivo original (previo al cambio) respaldado en:
-  `docs/backups/Header.astro.2026-10-28.bak`
-- Fuente del respaldo: `git show HEAD:src/components/Header.astro`.
+- Modo mantención administrativa activo.
+- Todas las rutas del sitio muestran únicamente la página `/mantenimiento`.
+- La página muestra solo:
+  - Logo de Exportadora Sur Berries.
+  - Mensaje `SITIO EN MANTENCIÓN ADMINISTRATIVA`.
+- La página de mantención incluye `noindex, nofollow`.
+- Se revirtió el badge junto al logo en `src/components/Header.astro` (queda sin aviso).
+- No se elimina contenido del proyecto; solo se bloquea su visualización pública mediante redirects.
 
 ---
 
 ## Archivos modificados
 
-- `src/components/Header.astro`
+- `netlify.toml`: todas las rutas redirigen a `/mantenimiento`, con excepciones para logo, favicon, robots, sitemap y assets.
+- `src/pages/mantenimiento.astro`: página mínima con solo logo y mensaje.
+- `src/components/Header.astro`: revertido a su versión original, sin badge.
 
 ## Archivos creados
 
 - `docs/backups/Header.astro.2026-10-28.bak`
+- `docs/backups/netlify.toml.2026-10-28.bak`
+- `docs/backups/mantenimiento.astro.2026-10-28.bak`
 - `docs/CURRENT.md`
 
 ---
 
-## Pendiente
+## Respaldo
 
-- Ejecutar `npm run build` y desplegar en Netlify para reflejar el cambio en producción.
+Respaldos de los archivos originales previos a los cambios en:
+
+- `docs/backups/Header.astro.2026-10-28.bak`
+- `docs/backups/netlify.toml.2026-10-28.bak`
+- `docs/backups/mantenimiento.astro.2026-10-28.bak`
+
+---
+
+## Pendiente / para reactivar
+
+- Para reactivar el sitio: restaurar `netlify.toml` desde `docs/backups/netlify.toml.2026-10-28.bak` y volver a desplegar.
 - No requiere migraciones ni SQL.
 - `docs/DECISIONS.md` no existe todavía; se recomienda crearlo y registrar allí las decisiones de arquitectura cuando corresponda.
