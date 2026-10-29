@@ -1,0 +1,57 @@
+[build]
+command = "npm run build"
+publish = "dist"
+
+# ============================================
+# MODO MANTENCIÓN ADMINISTRATIVA
+# Todo el sitio muestra únicamente /mantenimiento
+# ============================================
+
+# Recursos permitidos: solo el logo y el favicon
+[[redirects]]
+from = "/images/logo-surberries.png"
+to = "/images/logo-surberries.png"
+status = 200
+force = true
+
+[[redirects]]
+from = "/favicon.ico"
+to = "/favicon.ico"
+status = 200
+force = true
+
+[[redirects]]
+from = "/favicon.svg"
+to = "/favicon.svg"
+status = 200
+force = true
+
+# Página de mantención (evita bucle)
+[[redirects]]
+from = "/mantenimiento"
+to = "/mantenimiento"
+status = 200
+force = true
+
+[[redirects]]
+from = "/mantenimiento/*"
+to = "/mantenimiento/:splat"
+status = 200
+force = true
+
+# Todo lo demás -> mantención
+[[redirects]]
+from = "/*"
+to = "/mantenimiento"
+status = 200
+force = true
+
+# ============================================
+# HEADERS - Seguridad
+# ============================================
+[[headers]]
+for = "/*"
+[headers.values]
+X-Frame-Options = "DENY"
+X-Content-Type-Options = "nosniff"
+X-XSS-Protection = "1; mode=block"
